@@ -11,13 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.csc557.ui.theme.CSC557Theme
+import com.example.csc557.ui.theme.cardetails.carDetails
+import com.example.csc557.ui.theme.cardetails.carParts
 import com.example.csc557.ui.theme.home.home
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-           home()
+//           home()
+            carDetails()
         }
     }
 }

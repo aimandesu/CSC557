@@ -4,6 +4,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 
 import androidx.compose.ui.unit.dp
 import com.example.csc557.R
+import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
 import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
@@ -134,14 +137,19 @@ fun listCars() {
                         Row(
                             modifier =
                             Modifier
-                                .padding(5.dp)
+//                                .padding(5.dp)
                                 .fillMaxWidth()
-                                .height(20.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .height(35.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Details")
+                            Text(text = "Details", modifier = Modifier.padding(start = 5.dp))
                             Button(
-
+                                shape = RoundedCornerShape(topStart = 22.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color.DarkGray,
+                                    contentColor = Color.White
+                                ),
                                 onClick = {}) {
                                 Text(text = "Rent Now")
                             }
@@ -156,26 +164,3 @@ fun listCars() {
     }
 }
 
-@Composable
-fun bottomNavigation() {
-    Surface(
-        shape = RoundedCornerShape(topEnd = 15.dp, topStart = 15.dp),
-//        modifier = Modifier.padding(5.dp)
-    ) {
-        Row(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(color = Color.Red)
-                .padding(10.dp)
-                ,
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Icon(imageVector = Icons.Default.Create, contentDescription = "")
-            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
-            Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
-        }
-    }
-
-}

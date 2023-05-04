@@ -5,7 +5,12 @@ import com.example.csc557.ui.theme.model.Car
 
 
 var carsAvailable = arrayOf(
-    Car("Mercedes", "Benz", 5, 100.00, R.drawable.p1),
-    Car("Ferrari", "Gita", 5, 100.00, R.drawable.musume),
-    Car("Mercedes", "Benz", 5, 100.00, R.drawable.nemesis),
+    Car("Mercedes", "Benz", 5, 100.00, R.drawable.p1,
+        arrayListOf("3 seats", "up to ", "value", "auto", "lol" ),),
+    Car("Ferrari", "Gita", 5, 100.00, R.drawable.musume,
+        arrayListOf("5 seats", "up to data ", "value 12", "manual", "not wro" ),),
+    Car("Mercedes", "mor", 5, 100.00, R.drawable.nemesis,
+        arrayListOf("3 seats", "up to ", "value", "auto", "value" ),),
 )
+
+//mapOf("seat" to "3 seats", "engine" to "up to ","radiator" to "value", "type" to "auto","clutch" to "value")
