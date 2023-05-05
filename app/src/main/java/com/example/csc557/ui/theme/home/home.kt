@@ -1,8 +1,13 @@
 package com.example.csc557.ui.theme.home
 
 import androidx.compose.foundation.*
+
+
+//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.SnackbarDefaults.backgroundColor
@@ -17,17 +22,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.csc557.R
+import com.example.csc557.Screen
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
 import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
 
 @Composable
-fun home() {
+fun home(navController: NavController) {
     Box(
         modifier =
         Modifier
@@ -40,7 +50,7 @@ fun home() {
         ) {
             browseCars()
             hotDeals()
-            listCars()
+            listCars(navController)
             Box(
                 modifier = Modifier.fillMaxSize(),
                 Alignment.BottomCenter
@@ -54,22 +64,94 @@ fun home() {
 
 @Composable
 fun browseCars() {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var text by remember { mutableStateOf("") }
     Column() {
-        Text(text = "Browse Cars", modifier = Modifier.padding(start = 10.dp))
-        OutlinedTextField(
+        Text(
+            text = "Browse Cars",
+            modifier = Modifier
+                .padding(start = 10.dp),
+            fontSize = 30.sp,
+        )
+        Surface(
             shape = RoundedCornerShape(22.dp),
             modifier = Modifier
                 .fillMaxWidth()
+                .height(70.dp)
 //                .fillMaxHeight(0.12f)
                 .padding(10.dp),
-            value = text,
-            label = { Text(text = "Enter Your Name") },
-            onValueChange = {
-                text = it
+            elevation = 15.dp,
+        ) {
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                BasicTextField(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .align(Alignment.CenterStart),
+                    value = text,
+                    onValueChange = {
+                        text = it
+                    },
+                    decorationBox = {
+                            innerTextField ->
+                        if (text.isEmpty()) {
+                            Text(
+                                text = "search",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.LightGray
+                            )
+                        }
+                        innerTextField()
+                    }
+                )
             }
-        )
+
+
+        }
+
     }
+}
+
+@Composable
+private fun MyUI(placeholder: String = "Enter Your Name") {
+    var value by remember {
+        mutableStateOf("")
+    }
+
+    BasicTextField(
+        value = value,
+        onValueChange = { newText ->
+            value = newText
+        },
+        textStyle = TextStyle(
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.DarkGray
+        ),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 64.dp) // margin left and right
+                    .fillMaxWidth()
+                    .border(
+                        width = 2.dp,
+                        color = Color(0xFFAAE9E6),
+                        shape = RoundedCornerShape(size = 16.dp)
+                    )
+                    .padding(horizontal = 16.dp, vertical = 12.dp), // inner padding
+            ) {
+                if (value.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.LightGray
+                    )
+                }
+                innerTextField()
+            }
+        }
+    )
 }
 
 @Composable
@@ -78,12 +160,12 @@ fun hotDeals() {
         modifier =
         Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.05f)
+            .height(35.dp)
             .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Hot deals")
+        Text(text = "Hot deals", fontSize = 20.sp)
         TextButton(onClick = {}) {
             Text(text = "view all")
         }
@@ -91,20 +173,21 @@ fun hotDeals() {
 }
 
 @Composable
-fun listCars() {
+fun listCars(navController: NavController) {
     val scrollState = rememberScrollState()
     Row(
         modifier =
         Modifier
             .horizontalScroll(scrollState)
             .fillMaxWidth(1f)
-            .fillMaxHeight(0.5f)
+            .height(300.dp)
             .padding(10.dp)
     ) {
         for (car in carsAvailable) {
             Surface(
                 shape = RoundedCornerShape(22.dp),
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(5.dp),
+                elevation = 15.dp
             ) {
                 Box(
                     Modifier
@@ -128,11 +211,14 @@ fun listCars() {
                             Modifier
                                 .padding(5.dp)
                                 .fillMaxWidth()
-                                .height(20.dp),
+                                .height(50.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = car.model)
-                            Text(text = "RM" + car.price.toString())
+                            Text(text = car.model, fontSize = 20.sp)
+                            Text(
+                                text = "RM" + car.price.toString() + "\n/per day",
+                                fontSize = 18.sp
+                            )
                         }
                         Row(
                             modifier =
@@ -143,15 +229,21 @@ fun listCars() {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Details", modifier = Modifier.padding(start = 5.dp))
+                            Text(
+                                text = "Details",
+                                modifier = Modifier.padding(start = 5.dp),
+                                fontSize = 18.sp
+                            )
                             Button(
                                 shape = RoundedCornerShape(topStart = 22.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Color.DarkGray,
                                     contentColor = Color.White
                                 ),
-                                onClick = {}) {
-                                Text(text = "Rent Now")
+                                onClick = {
+                                    navController.navigate(Screen.CarDetailScreen.route + "/${car.model}")
+                                }) {
+                                Text(text = "Rent Now", fontSize = 17.sp)
                             }
                         }
                     }

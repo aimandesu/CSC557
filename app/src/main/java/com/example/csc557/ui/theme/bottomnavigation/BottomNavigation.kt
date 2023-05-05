@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
@@ -15,28 +16,27 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 
 @Composable
 fun bottomNavigation() {
-    Surface(
-        shape = RoundedCornerShape(topEnd = 15.dp, topStart = 15.dp),
-//        modifier = Modifier.padding(5.dp)
-    ) {
-        Row(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(color = Color.Red)
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Icon(imageVector = Icons.Default.Create, contentDescription = "")
-            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
-            Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
-        }
-    }
+    Row(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .shadow(AppBarDefaults.TopAppBarElevation)
+            .zIndex(1f)
+            .padding(25.dp),
+//                .background(color = Color(16, 85, 205))
 
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        Icon(imageVector = Icons.Default.Create, contentDescription = "")
+        Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
+        Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
+    }
 }

@@ -3,16 +3,14 @@ package com.example.csc557
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.csc557.ui.theme.CSC557Theme
+import androidx.navigation.NavType
+//import androidx.compose.ui.graphics.BlendMode.Companion.Screen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.csc557.ui.theme.cardetails.carDetails
-import com.example.csc557.ui.theme.cardetails.carParts
 import com.example.csc557.ui.theme.home.home
 
 class MainActivity : ComponentActivity() {
@@ -20,20 +18,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 //           home()
-            carDetails()
+//            carDetails()
+            navigation()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CSC557Theme {
-        Greeting("Android")
+fun navigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+        composable(route = Screen.HomeScreen.route) {
+            home(navController = navController)
+        }
+        composable(
+            route = Screen.CarDetailScreen.route + "/{nameKey}",
+            arguments = listOf(
+                navArgument("nameKey") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+          navBackStackEntry ->
+            carDetails(carModel = navBackStackEntry.arguments?.getString("nameKey"), navController)
+        }
     }
 }
