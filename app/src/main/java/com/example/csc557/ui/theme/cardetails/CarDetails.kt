@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.csc557.Screen
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 import com.example.csc557.ui.theme.data.carsAvailable
 
@@ -73,7 +74,7 @@ fun carDetails(carModel: String?, navController: NavController) {
             modifier = Modifier.fillMaxSize(),
             Alignment.BottomCenter
         ) {
-            rentCar(indexToFind)
+            rentCar(indexToFind, navController)
         }
 
     }
@@ -159,7 +160,7 @@ fun PhotoItem(indexToFind: Int, photo: Int) {
 }
 
 @Composable
-fun rentCar(indexToFind: Int) {
+fun rentCar(indexToFind: Int, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,7 +183,9 @@ fun rentCar(indexToFind: Int) {
                 backgroundColor = Color.DarkGray,
                 contentColor = Color.White
             ),
-            onClick = {}) {
+            onClick = {
+                navController.navigate(Screen.PaymentDetailScreen.route)
+            }) {
             Text(text = "Rent Now")
         }
     }

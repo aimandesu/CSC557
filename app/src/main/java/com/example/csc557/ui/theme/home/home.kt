@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.SnackbarDefaults.backgroundColor
@@ -24,6 +26,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 
 import androidx.compose.ui.unit.dp
@@ -48,7 +52,7 @@ fun home(navController: NavController) {
         Column(
 //            modifier = Modifier.background(Color.Red)
         ) {
-            browseCars()
+            browseCars(navController)
             hotDeals()
             listCars(navController)
             Box(
@@ -63,7 +67,7 @@ fun home(navController: NavController) {
 }
 
 @Composable
-fun browseCars() {
+fun browseCars(navController: NavController) {
     var text by remember { mutableStateOf("") }
     Column() {
         Text(
@@ -91,8 +95,15 @@ fun browseCars() {
                     onValueChange = {
                         text = it
                     },
-                    decorationBox = {
-                            innerTextField ->
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Search
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            navController.navigate(Screen.SearchScreen.route + "/$text")
+                        }
+                    ),
+                    decorationBox = { innerTextField ->
                         if (text.isEmpty()) {
                             Text(
                                 text = "search",
@@ -184,70 +195,73 @@ fun listCars(navController: NavController) {
             .padding(10.dp)
     ) {
         for (car in carsAvailable) {
-            Surface(
-                shape = RoundedCornerShape(22.dp),
-                modifier = Modifier.padding(5.dp),
-                elevation = 15.dp
-            ) {
-                Box(
-                    Modifier
 
-                        .fillMaxHeight()
-                        .width(200.dp)
+            if (car.hotDeals) {
+                Surface(
+                    shape = RoundedCornerShape(22.dp),
+                    modifier = Modifier.padding(5.dp),
+                    elevation = 15.dp
+                ) {
+                    Box(
+                        Modifier
+
+                            .fillMaxHeight()
+                            .width(200.dp)
 //                        .background(color = Color.Red)
 
-                ) {
-                    Image(
-                        painter = painterResource(id = car.image),
-                        contentDescription = "",
-                        contentScale = ContentScale.FillHeight,
-                    )
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Row(
-                            modifier =
-                            Modifier
-                                .padding(5.dp)
-                                .fillMaxWidth()
-                                .height(50.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        Image(
+                            painter = painterResource(id = car.image),
+                            contentDescription = "",
+                            contentScale = ContentScale.FillHeight,
+                        )
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            Text(text = car.model, fontSize = 20.sp)
-                            Text(
-                                text = "RM" + car.price.toString() + "\n/per day",
-                                fontSize = 18.sp
-                            )
-                        }
-                        Row(
-                            modifier =
-                            Modifier
+                            Row(
+                                modifier =
+                                Modifier
+                                    .padding(5.dp)
+                                    .fillMaxWidth()
+                                    .height(50.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(text = car.model, fontSize = 20.sp)
+                                Text(
+                                    text = "RM" + car.price.toString() + "\n/per day",
+                                    fontSize = 18.sp
+                                )
+                            }
+                            Row(
+                                modifier =
+                                Modifier
 //                                .padding(5.dp)
-                                .fillMaxWidth()
-                                .height(35.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Details",
-                                modifier = Modifier.padding(start = 5.dp),
-                                fontSize = 18.sp
-                            )
-                            Button(
-                                shape = RoundedCornerShape(topStart = 22.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.DarkGray,
-                                    contentColor = Color.White
-                                ),
-                                onClick = {
-                                    navController.navigate(Screen.CarDetailScreen.route + "/${car.model}")
-                                }) {
-                                Text(text = "Rent Now", fontSize = 17.sp)
+                                    .fillMaxWidth()
+                                    .height(35.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Details",
+                                    modifier = Modifier.padding(start = 5.dp),
+                                    fontSize = 18.sp
+                                )
+                                Button(
+                                    shape = RoundedCornerShape(topStart = 22.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.DarkGray,
+                                        contentColor = Color.White
+                                    ),
+                                    onClick = {
+                                        navController.navigate(Screen.CarDetailScreen.route + "/${car.model}")
+                                    }) {
+                                    Text(text = "Rent Now", fontSize = 17.sp)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
             }
 

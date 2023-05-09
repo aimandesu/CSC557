@@ -12,6 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.csc557.ui.theme.cardetails.carDetails
 import com.example.csc557.ui.theme.home.home
+import com.example.csc557.ui.theme.payment.payment
+import com.example.csc557.ui.theme.search.search
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +40,21 @@ fun navigation() {
                     type = NavType.StringType
                 }
             )
-        ) {
-          navBackStackEntry ->
+        ) { navBackStackEntry ->
             carDetails(carModel = navBackStackEntry.arguments?.getString("nameKey"), navController)
+        }
+        composable(route = Screen.PaymentDetailScreen.route) {
+            payment(navController = navController)
+        }
+        composable(route = Screen.SearchScreen.route + "/{searchItem}",
+            arguments = listOf(
+                navArgument("searchItem") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            navBackStackEntry ->
+            search(model = navBackStackEntry.arguments?.getString("searchItem"), navController)
         }
     }
 }
