@@ -10,10 +10,7 @@ import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -34,9 +31,9 @@ fun bottomNavigation() {
 
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Icon(imageVector = Icons.Default.Create, contentDescription = "")
-        Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
-        Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
+        Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+        Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "")
+        Icon(imageVector = Icons.Filled.Person, contentDescription = "")
+//        Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
     }
 }

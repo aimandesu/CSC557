@@ -117,13 +117,13 @@ fun searchResult(searches: String, navController: NavController) {
             ) {
                 Box(
                     Modifier
-                        .height(400.dp)
+                        .height(295.dp)
                         .fillMaxWidth()
                 ) {
                     Image(
                         painter = painterResource(id = car.image),
                         contentDescription = "",
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.FillHeight,
                     )
                     Column(
                         modifier = Modifier.fillMaxSize(),

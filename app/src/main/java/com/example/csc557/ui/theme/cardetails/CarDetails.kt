@@ -31,7 +31,7 @@ import com.example.csc557.ui.theme.data.carsAvailable
 
 
 @Composable
-fun carDetails(carModel: String?, navController: NavController) {
+fun carDetails(carModel: String?, carBrand: String? , navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +48,7 @@ fun carDetails(carModel: String?, navController: NavController) {
         TopAppBar(
             elevation = 0.dp,
             title = {
-                Text("")
+                Text(carBrand.toString(), color = Color.White)
             },
             backgroundColor = Color(16, 85, 205),
             navigationIcon = {
@@ -108,7 +108,7 @@ fun carImage(indexToFind: Int) {
             modifier = Modifier.fillMaxWidth(),
             painter = painterResource(id = carsAvailable[indexToFind].image),
             contentDescription = "",
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.FillHeight,
             alignment = Alignment.Center,
         )
 
