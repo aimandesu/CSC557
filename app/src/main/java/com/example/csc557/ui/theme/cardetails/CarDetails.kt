@@ -5,8 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
@@ -14,37 +16,62 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import com.example.csc557.R
 import com.example.csc557.Screen
+import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 import com.example.csc557.ui.theme.data.carsAvailable
+import com.example.csc557.ui.theme.model.Car
 
 
 @Composable
-fun carDetails(carModel: String?, carBrand: String? , navController: NavController) {
+fun carDetails(
+    carModel: String?,
+    carBrand: String?,
+    navController: NavController,
+    sharedViewModel: SharedViewModel
+) {
+
+
+    var brand: String by remember { mutableStateOf("") }
+    var model: String by remember { mutableStateOf("") }
+    var price: Double by remember { mutableStateOf(0.00) }
+    var year: Int by remember { mutableStateOf(0) }
+    var carPart: ArrayList<String> by remember {
+        mutableStateOf(ArrayList())
+    }
+    var image: String by remember { mutableStateOf("") }
+
+    sharedViewModel.fetchSpecificCar(carModel.toString()) { carData ->
+        brand = carData.brand
+        model = carData.model
+        price = carData.price
+        year = carData.year
+        carPart = carData.carParts
+        image = carData.image
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(1f)
             .background(color = Color(16, 85, 205))
+
     ) {
-        var indexToFind: Int = 0;
-        for ((index, value) in carsAvailable.withIndex()) {
-//            println("the element at $index is $value")
-            if (value.model == carModel) {
-                indexToFind = index;
-            }
-        }
+
         TopAppBar(
             elevation = 0.dp,
             title = {
@@ -58,27 +85,23 @@ fun carDetails(carModel: String?, carBrand: String? , navController: NavControll
                     Icon(Icons.Filled.ArrowBack, null, tint = Color.White)
                 }
             },
-//            actions = {
-//                IconButton(onClick = {/* Do Something*/ }) {
-//                    Icon(Icons.Filled.Share, null)
-//                }
-//                IconButton(onClick = {/* Do Something*/ }) {
-//                    Icon(Icons.Filled.Settings, null)
-//                }
-//            },
-        )
+
+            )
+
         carModel(carModel.toString())
-        carImage(indexToFind)
-        carParts(indexToFind)
+        carImage(image)
+        carParts(carPart)
         Box(
             modifier = Modifier.fillMaxSize(),
             Alignment.BottomCenter
         ) {
-            rentCar(indexToFind, navController)
+            rentCar(price, navController)
         }
-
     }
+
+
 }
+
 
 @Composable
 fun carModel(model: String) {
@@ -93,7 +116,7 @@ fun carModel(model: String) {
 }
 
 @Composable
-fun carImage(indexToFind: Int) {
+fun carImage(imageString: String) {
 
     Column(
         modifier = Modifier
@@ -106,7 +129,7 @@ fun carImage(indexToFind: Int) {
     ) {
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = carsAvailable[indexToFind].image),
+            painter = rememberImagePainter(imageString),
             contentDescription = "",
             contentScale = ContentScale.FillHeight,
             alignment = Alignment.Center,
@@ -117,20 +140,21 @@ fun carImage(indexToFind: Int) {
 }
 
 @Composable
-fun carParts(indexToFind: Int) {
+fun carParts(carParts: ArrayList<String>?) {
     LazyVerticalGrid(
+//        modifier = Modifier.height(300.dp),
         columns = GridCells.Adaptive(minSize = 128.dp)
     ) {
 
         //find position for selected item in the array, the pass carParts.size
-        items(carsAvailable[indexToFind].carParts.size) { photo ->
-            PhotoItem(indexToFind, photo)
+        items(carParts!!.size) { index ->
+            PhotoItem(carParts, index)
         }
     }
 }
 
 @Composable
-fun PhotoItem(indexToFind: Int, photo: Int) {
+fun PhotoItem(carParts: ArrayList<String>?, index: Int) {
     Surface(
         border = BorderStroke(1.dp, color = Color.White),
         shape = RoundedCornerShape(22.dp),
@@ -149,7 +173,7 @@ fun PhotoItem(indexToFind: Int, photo: Int) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = carsAvailable[indexToFind].carParts[photo],
+                text = carParts!![index],
                 textAlign = TextAlign.Center,
                 color = Color.White
             )
@@ -160,7 +184,7 @@ fun PhotoItem(indexToFind: Int, photo: Int) {
 }
 
 @Composable
-fun rentCar(indexToFind: Int, navController: NavController) {
+fun rentCar(price: Double, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -171,13 +195,15 @@ fun rentCar(indexToFind: Int, navController: NavController) {
     ) {
         Text(
             modifier = Modifier.width(200.dp),
-            text = "RM" + carsAvailable[indexToFind].price.toString() + "/ Per Day",
+            text = "RM$price/ Per Day",
             fontSize = 20.sp,
             color = Color.White,
             textAlign = TextAlign.Center,
         )
         Button(
-            modifier = Modifier.width(200.dp).fillMaxHeight(),
+            modifier = Modifier
+                .width(200.dp)
+                .fillMaxHeight(),
             shape = RoundedCornerShape(topStart = 22.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.DarkGray,

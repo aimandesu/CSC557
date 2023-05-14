@@ -5,6 +5,9 @@ import androidx.compose.foundation.*
 
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -31,10 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.csc557.R
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
@@ -42,8 +47,8 @@ import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
 import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
-import com.example.csc557.ui.theme.testing.bro
-import com.example.csc557.ui.theme.testing.testing
+//import com.example.csc557.ui.theme.testing.bro
+//import com.example.csc557.ui.theme.testing.testing
 
 @Composable
 fun home(navController: NavController, sharedViewModel: SharedViewModel) {
@@ -61,10 +66,7 @@ fun home(navController: NavController, sharedViewModel: SharedViewModel) {
             browseCars(navController)
             viewAllCars(navController)
             hotDeals(navController)
-            listCars(navController)
-            bro(sharedViewModel = sharedViewModel)
-//            testing(navController = navController, sharedViewModel = sharedViewModel)
-
+            listCars(navController, sharedViewModel)
             Box(
                 modifier = Modifier.fillMaxSize(),
                 Alignment.BottomCenter
@@ -133,48 +135,6 @@ fun browseCars(navController: NavController) {
     }
 }
 
-//@Composable
-//private fun MyUI(placeholder: String = "Enter Your Name") {
-//    var value by remember {
-//        mutableStateOf("")
-//    }
-//
-//    BasicTextField(
-//        value = value,
-//        onValueChange = { newText ->
-//            value = newText
-//        },
-//        textStyle = TextStyle(
-//            fontSize = 20.sp,
-//            fontWeight = FontWeight.Medium,
-//            color = Color.DarkGray
-//        ),
-//        decorationBox = { innerTextField ->
-//            Box(
-//                modifier = Modifier
-//                    .padding(horizontal = 64.dp) // margin left and right
-//                    .fillMaxWidth()
-//                    .border(
-//                        width = 2.dp,
-//                        color = Color(0xFFAAE9E6),
-//                        shape = RoundedCornerShape(size = 16.dp)
-//                    )
-//                    .padding(horizontal = 16.dp, vertical = 12.dp), // inner padding
-//            ) {
-//                if (value.isEmpty()) {
-//                    Text(
-//                        text = placeholder,
-//                        fontSize = 18.sp,
-//                        fontWeight = FontWeight.Normal,
-//                        color = Color.LightGray
-//                    )
-//                }
-//                innerTextField()
-//            }
-//        }
-//    )
-//}
-
 @Composable
 fun viewAllCars(navController: NavController) {
     Surface(
@@ -184,35 +144,40 @@ fun viewAllCars(navController: NavController) {
             .height(200.dp)
             .padding(10.dp)
     ) {
-//        Box(
-////            modifier = Modifier
-//////                .background(color = Color.Blue)
-////                .padding(start = 10.dp)
-//        ) {
-            Image(
-                painter = painterResource(id = R.drawable.car1),
-                contentDescription = "",
-                contentScale = ContentScale.FillWidth,
-            )
-            Column(
+        Image(
+            painter = painterResource(id = R.drawable.car1),
+            contentDescription = "",
+            contentScale = ContentScale.FillWidth,
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Welcome to Car Rental!",
+                color = Color.White,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 10.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(text = "Welcome to Car Rental!", color = Color.White)
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Red),
-                    onClick = {
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.DarkGray),
+                            startY = 10f
+                        ),
+                    ),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Red
+                ),
+                onClick = {
                     navController.navigate(Screen.AllCarsScreen.route)
                 }) {
-                    Text(text = "view all cars", color = Color.White)
-                }
+                Text(text = "view all cars", color = Color.White)
             }
-//        }
+        }
     }
 
 }
@@ -233,23 +198,27 @@ fun hotDeals(navController: NavController) {
 }
 
 @Composable
-fun listCars(navController: NavController) {
-    val scrollState = rememberScrollState()
-    Row(
+fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
+//    val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val theList = sharedViewModel.fetchCarsHotDealsList()
+
+
+    LazyRow(
         modifier =
         Modifier
-            .horizontalScroll(scrollState)
+//                .horizontalScroll(scrollState)
             .fillMaxWidth(1f)
             .height(300.dp)
             .padding(10.dp)
     ) {
-        for (car in carsAvailable) {
+        itemsIndexed(theList) { index, item ->
 
-            if (car.hotDeals) {
+            if (theList[index].hotDeals) {
                 Surface(
                     shape = RoundedCornerShape(22.dp),
                     modifier = Modifier.padding(5.dp),
-                    elevation = 15.dp
+//                    elevation = 15.dp
                 ) {
                     Box(
                         Modifier
@@ -260,7 +229,7 @@ fun listCars(navController: NavController) {
 
                     ) {
                         Image(
-                            painter = painterResource(id = car.image),
+                            painter = rememberImagePainter(theList[index].image),
                             contentDescription = "",
                             contentScale = ContentScale.FillHeight,
                         )
@@ -276,10 +245,18 @@ fun listCars(navController: NavController) {
                                     .height(50.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(text = car.model, fontSize = 20.sp)
+                                Text(text = theList[index].model, fontSize = 20.sp, color = Color.White)
                                 Text(
-                                    text = "RM" + car.price.toString() + "\n/per day",
-                                    fontSize = 18.sp
+                                    text = "RM" + theList[index].price.toString() + "\n/per day",
+                                    fontSize = 18.sp,
+                                    color = Color.White,
+//                                    modifier = Modifier
+//                                        .background(
+//                                            Brush.verticalGradient(
+//                                                colors = listOf(Color.Transparent, Color.DarkGray),
+//                                                startY = 10f
+//                                            ),
+//                                        ),
                                 )
                             }
                             Row(
@@ -294,7 +271,8 @@ fun listCars(navController: NavController) {
                                 Text(
                                     text = "Details",
                                     modifier = Modifier.padding(start = 5.dp),
-                                    fontSize = 18.sp
+                                    fontSize = 18.sp,
+                                    color = Color.White
                                 )
                                 Button(
                                     shape = RoundedCornerShape(topStart = 22.dp),
@@ -303,13 +281,13 @@ fun listCars(navController: NavController) {
                                         contentColor = Color.White
                                     ),
                                     onClick = {
-                                        navController.navigate(Screen.CarDetailScreen.route + "/${car.model}/${car.brand}")
+                                        navController.navigate(Screen.CarDetailScreen.route + "/${theList[index].model}/${theList[index].brand}")
                                     }) {
                                     Text(text = "Rent Now", fontSize = 17.sp)
                                 }
                             }
                         }
-
+//                    }
                     }
                 }
             }
