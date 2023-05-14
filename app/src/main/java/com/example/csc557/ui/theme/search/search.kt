@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
-import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
 
 @Composable
@@ -126,7 +125,7 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
                             Row(
                                 modifier =
                                 Modifier
-                                    .padding(5.dp)
+                                    .padding(15.dp)
                                     .fillMaxWidth()
                                     .height(50.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -146,24 +145,27 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
                                 modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .height(35.dp),
+                                    .height(55.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     text = "Details",
-                                    modifier = Modifier.padding(start = 5.dp),
+                                    modifier = Modifier.padding(start = 15.dp),
                                     fontSize = 18.sp,
                                     color = Color.White
                                 )
                                 Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .width(150.dp),
                                     shape = RoundedCornerShape(topStart = 22.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         backgroundColor = Color.DarkGray,
                                         contentColor = Color.White
                                     ),
                                     onClick = {
-                                        navController.navigate(Screen.CarDetailScreen.route + "/${theList[index].model}")
+                                        navController.navigate(Screen.CarDetailScreen.route + "/${theList[index].model}/${theList[index].brand}")
                                     }) {
                                     Text(text = "Rent Now", fontSize = 17.sp)
                                 }

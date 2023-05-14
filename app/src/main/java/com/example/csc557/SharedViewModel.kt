@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
 import com.example.csc557.ui.theme.model.CarData
 import com.example.csc557.ui.theme.model.UserData
@@ -171,8 +170,10 @@ class SharedViewModel() : ViewModel() {
 
     fun fetchAllCars(
         arrayListCars: (ArrayList<String>) -> Unit
-    ) {
+    ): SnapshotStateList<CarData> {
 //        var allCars = mutableStateListOf<String>()
+        var carList = mutableStateListOf<CarData>()
+
         var allCars = ArrayList<String>()
         var db: FirebaseFirestore = FirebaseFirestore.getInstance()
         db.collection("cars")
@@ -182,14 +183,16 @@ class SharedViewModel() : ViewModel() {
                     val list = queryDocumentSnapshots.documents
                     for (d in list) {
                         val c: CarData? = d.toObject(CarData::class.java)
+                        carList.add(c as CarData)
                         if(!allCars.contains(c!!.brand)){
                             allCars.add(c!!.brand)
                         }
                     }
                     arrayListCars(allCars)
-                    Log.d("TAG", allCars.size.toString())
+//                    Log.d("TAG", allCars.size.toString())
                 }
             }
+        return carList
     }
 
 }

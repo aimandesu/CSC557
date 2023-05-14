@@ -45,7 +45,7 @@ import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
-import com.example.csc557.ui.theme.data.carsAvailable
+//import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
 //import com.example.csc557.ui.theme.testing.bro
 //import com.example.csc557.ui.theme.testing.testing
@@ -53,7 +53,7 @@ import com.example.csc557.ui.theme.model.Car
 @Composable
 fun home(navController: NavController, sharedViewModel: SharedViewModel) {
     val context = LocalContext.current
-
+    val scrollState = rememberScrollState()
     Box(
         modifier =
         Modifier
@@ -62,17 +62,19 @@ fun home(navController: NavController, sharedViewModel: SharedViewModel) {
 //            .background(brush = Brush.verticalGradient(listOf(Color.Red, Color.Blue)))
 //            .background(Color.Green)
     ) {
-        Column {
+        Column (
+            modifier = Modifier.verticalScroll(scrollState)
+                ) {
             browseCars(navController)
             viewAllCars(navController)
             hotDeals(navController)
             listCars(navController, sharedViewModel)
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                Alignment.BottomCenter
-            ) {
-                bottomNavigation()
-            }
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                Alignment.BottomCenter
+//            ) {
+//                bottomNavigation()
+//            }
         }
 
     }
@@ -141,11 +143,11 @@ fun viewAllCars(navController: NavController) {
         shape = RoundedCornerShape(22.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(230.dp)
             .padding(10.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.car1),
+            painter = rememberImagePainter("https://wallpaperaccess.com/full/40047.jpg"),
             contentDescription = "",
             contentScale = ContentScale.FillWidth,
         )

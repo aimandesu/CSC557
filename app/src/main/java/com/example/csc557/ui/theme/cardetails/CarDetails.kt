@@ -33,7 +33,6 @@ import com.example.csc557.R
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
-import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
 
 
