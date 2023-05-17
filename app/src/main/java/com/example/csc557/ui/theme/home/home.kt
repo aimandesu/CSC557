@@ -17,10 +17,7 @@ import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +36,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
+import com.example.csc557.NavigationItem
 import com.example.csc557.R
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
@@ -47,6 +47,7 @@ import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
 //import com.example.csc557.ui.theme.data.carsAvailable
 import com.example.csc557.ui.theme.model.Car
+
 //import com.example.csc557.ui.theme.testing.bro
 //import com.example.csc557.ui.theme.testing.testing
 
@@ -54,6 +55,8 @@ import com.example.csc557.ui.theme.model.Car
 fun home(navController: NavController, sharedViewModel: SharedViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val currentDestination = navBackStackEntry?.destination
     Box(
         modifier =
         Modifier
@@ -62,20 +65,30 @@ fun home(navController: NavController, sharedViewModel: SharedViewModel) {
 //            .background(brush = Brush.verticalGradient(listOf(Color.Red, Color.Blue)))
 //            .background(Color.Green)
     ) {
-        Column (
-            modifier = Modifier.verticalScroll(scrollState)
+        Scaffold(
+            bottomBar = {
+                NavigationItem(navController = navController)
+            },
+            content = { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .padding(paddingValues)
                 ) {
-            browseCars(navController)
-            viewAllCars(navController)
-            hotDeals(navController)
-            listCars(navController, sharedViewModel)
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                Alignment.BottomCenter
-//            ) {
-//                bottomNavigation()
-//            }
-        }
+                    browseCars(navController)
+                    viewAllCars(navController)
+                    hotDeals(navController)
+                    listCars(navController, sharedViewModel)
+//                    Box(
+//                        modifier = Modifier.fillMaxSize(),
+//                        Alignment.BottomCenter
+//                    ) {
+//                        bottomNavigation()
+//                    }
+                }
+            }
+        )
+
 
     }
 }
@@ -120,8 +133,8 @@ fun browseCars(navController: NavController) {
                     decorationBox = { innerTextField ->
                         if (text.isEmpty()) {
                             Text(
-                                text = "search",
-                                fontSize = 18.sp,
+                                text = "search model",
+                                fontSize = 19.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = Color.LightGray
                             )
@@ -247,7 +260,11 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
                                     .height(50.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(text = theList[index].model, fontSize = 20.sp, color = Color.White)
+                                Text(
+                                    text = theList[index].model,
+                                    fontSize = 20.sp,
+                                    color = Color.White
+                                )
                                 Text(
                                     text = "RM" + theList[index].price.toString() + "\n/per day",
                                     fontSize = 18.sp,
