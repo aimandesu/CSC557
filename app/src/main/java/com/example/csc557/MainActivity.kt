@@ -10,10 +10,11 @@ import androidx.activity.viewModels
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+//import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -21,7 +22,7 @@ import com.example.csc557.cartscreen.cartScreen
 import com.example.csc557.profile.profileScreen
 import com.example.csc557.ui.theme.allcars.allCars
 import com.example.csc557.ui.theme.boardinglogin.BoardingLogin
-import com.example.csc557.ui.theme.boardinglogin.SignInViewModel
+//import com.example.csc557.ui.theme.boardinglogin.SignInViewModel
 import com.example.csc557.ui.theme.cardetails.carDetails
 import com.example.csc557.ui.theme.home.home
 import com.example.csc557.ui.theme.payment.payment
@@ -43,19 +44,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun navigation(sharedViewModel: SharedViewModel) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.BoardingScreenSign.route) {
-        composable(route = Screen.BoardingScreenSign.route){
-            val viewModel = viewModel<SignInViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            val launcher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartIntentSenderForResult(),
-                onResult = {
-                    result ->
-                    if(result.resultCode == RESULT_OK){
-//                        life
-                    }
-                })
-        }
+    NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+//        composable(route = Screen.BoardingScreenSign.route){
+//            val viewModel = viewModel<SignInViewModel>()
+//            val state by viewModel.state.collectAsStateWithLifecycle()
+//            val launcher = rememberLauncherForActivityResult(
+//                contract = ActivityResultContracts.StartIntentSenderForResult(),
+//                onResult = {
+//                    result ->
+//                    if(result.resultCode == RESULT_OK){
+////                        life
+//                    }
+//                })
+//        }
         composable(route = Screen.HomeScreen.route) {
             home(navController = navController, sharedViewModel)
         }

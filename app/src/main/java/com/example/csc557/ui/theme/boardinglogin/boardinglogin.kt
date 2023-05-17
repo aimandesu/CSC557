@@ -24,21 +24,21 @@ import coil.compose.rememberImagePainter
 
 @Composable
 fun BoardingLogin(
-    state: SignInState,
-    onSignInClick: () -> Unit
+//    state: SignInState,
+//    onSignInClick: () -> Unit
 ) {
     val context = LocalContext.current
     
-    LaunchedEffect(key1 = state.signInError,){
-        state.signInError?.let {
-            error ->
-            Toast.makeText(
-                context,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
+//    LaunchedEffect(key1 = state.signInError,){
+//        state.signInError?.let {
+//            error ->
+//            Toast.makeText(
+//                context,
+//                error,
+//                Toast.LENGTH_LONG
+//            ).show()
+//        }
+//    }
     
     Box(modifier = Modifier
         .background(Color.Black)) {
