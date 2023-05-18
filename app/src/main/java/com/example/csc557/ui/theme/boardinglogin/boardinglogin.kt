@@ -15,35 +15,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.csc557.R
 
 
 @Composable
 fun BoardingLogin(
-//    state: SignInState,
-//    onSignInClick: () -> Unit
+    state: SignInState,
+    onSignInClick: () -> Unit
 ) {
     val context = LocalContext.current
-    
-//    LaunchedEffect(key1 = state.signInError,){
-//        state.signInError?.let {
-//            error ->
-//            Toast.makeText(
-//                context,
-//                error,
-//                Toast.LENGTH_LONG
-//            ).show()
-//        }
-//    }
+
+
+    LaunchedEffect(key1 = state.signInError,){
+        state.signInError?.let {
+            error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
     
     Box(modifier = Modifier
         .background(Color.Black)) {
         Image(
-            painter = rememberImagePainter("https://wallpapers.com/images/hd/lamborghini-iphone-blue-car-on-road-lvlzcio603k6ldwq.jpg"),
+            painter = painterResource(id = R.drawable.lamborgini),
             contentDescription = "",
             contentScale = ContentScale.FillBounds,
         )
@@ -75,9 +78,7 @@ fun BoardingLogin(
                     backgroundColor = Color.White
                 ),
                 shape = RoundedCornerShape(22.dp),
-                onClick = {
-
-                }) {
+                onClick = onSignInClick) {
                 Text(text = "Get Started", fontSize = 19.sp)
             }
         }

@@ -40,7 +40,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.4.0'
     }
     packagingOptions {
         resources {
@@ -78,6 +78,18 @@ dependencies {
 
 //    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
 
+    //new implementation
+    def lifecycle_version = "2.6.1"
+
+    implementation "com.google.firebase:firebase-auth-ktx:21.1.0"
+    implementation "com.google.android.gms:play-services-auth:20.4.1"
+//
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
+//    implementation "androidx:lifecycle:lifecycle-runtime-compose:2.6.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
+
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
 
 
     implementation 'androidx.compose.material:material:1.2.0'

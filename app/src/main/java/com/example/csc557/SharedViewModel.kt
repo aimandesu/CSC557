@@ -1,53 +1,43 @@
 package com.example.csc557
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import com.example.csc557.ui.theme.model.Car
+import com.example.csc557.ui.theme.model.AccountUser
 import com.example.csc557.ui.theme.model.CarData
-import com.example.csc557.ui.theme.model.UserData
-import com.google.android.gms.common.api.BooleanResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class SharedViewModel() : ViewModel() {
 
-//    fun saveUserData(
-//        userData: UserData,
-//        context: Context
-//    ) {
-//        val firestoreRef = Firebase
-//            .firestore
-//            .collection("user")
-//            .document(userData.userID)
-//
-//        try {
-//
-//            firestoreRef.set(userData)
-//                .addOnSuccessListener {
-//                    Toast.makeText(context, "successful adding user", Toast.LENGTH_LONG).show()
-//                }
-//
-//        } catch (e: Exception) {
-//            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-//        }
-//    }
+//    fun firstAppLogin(
+//        userUID:
+//    )
+
+    fun saveUserData(
+        userUID: String,
+        account: AccountUser,
+        context: Context
+    ) {
+        val firestoreRef = Firebase
+            .firestore
+            .collection("user")
+            .document(userUID)
+        try {
+
+            firestoreRef.set(account)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "successful adding user", Toast.LENGTH_LONG).show()
+                }
+
+        } catch (e: Exception) {
+            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
 
 //    fun retrieveSpecificUserData(
 //        context: Context,

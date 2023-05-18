@@ -43,6 +43,7 @@ import com.example.csc557.NavigationItem
 import com.example.csc557.R
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
+import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 
 //import com.example.csc557.ui.theme.data.carsAvailable
@@ -52,7 +53,11 @@ import com.example.csc557.ui.theme.model.Car
 //import com.example.csc557.ui.theme.testing.testing
 
 @Composable
-fun home(navController: NavController, sharedViewModel: SharedViewModel) {
+fun home(
+    navController: NavController,
+    sharedViewModel: SharedViewModel,
+
+) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 //    val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -75,6 +80,7 @@ fun home(navController: NavController, sharedViewModel: SharedViewModel) {
                         .verticalScroll(scrollState)
                         .padding(paddingValues)
                 ) {
+
                     browseCars(navController)
                     viewAllCars(navController)
                     hotDeals(navController)
