@@ -1,19 +1,19 @@
 package com.example.csc557.ui.theme.payment
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.*
 //import androidx.compose.material3.DatePicker
 //import androidx.compose.material3.ExperimentalMaterial3Api
 //import androidx.compose.material3.Text
 //import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,11 +22,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import java.math.RoundingMode
+import java.text.DateFormat
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Composable
-fun payment(navController: NavController) {
-    Column() {
+fun payment(navController: NavController, carModel: String?,
+            carBrand: String?, price: String?) {
+    val mDate = remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxSize()
+    ) {
         TopAppBar(
             title = { Text(text = "Payment & Details") },
             backgroundColor = Color.White,
@@ -42,7 +54,8 @@ fun payment(navController: NavController) {
                 }
             }
         )
-        calenderPreview()
+        calenderPreview(mDate)
+        TimePreview(mDate, carBrand, carModel, price)
     }
 }
 
@@ -63,7 +76,7 @@ fun payment(navController: NavController) {
 //}
 
 @Composable
-fun calenderPreview() {
+fun calenderPreview(mDate: MutableState<String>) {
     val mContext = LocalContext.current
     val mYear: Int
     val mMonth: Int
@@ -75,7 +88,6 @@ fun calenderPreview() {
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     mCalendar.time = Date()
-    val mDate = remember { mutableStateOf("") }
 
 
     val mDatePickerDialog = DatePickerDialog(
@@ -98,7 +110,7 @@ fun calenderPreview() {
         Button(
             modifier = Modifier
                 .height(50.dp)
-                .width(280.dp),
+                .fillMaxWidth(0.9f),
             shape = RoundedCornerShape(22.dp),
             onClick = {
                 mDatePickerDialog.show()
@@ -107,14 +119,150 @@ fun calenderPreview() {
             Text(text = "Select Rent Date", color = Color.White)
         }
 
-        // Displaying the mDate value in the Text
-        Text(text = "Selected Date: ${mDate.value}", fontSize = 20.sp, textAlign = TextAlign.Center)
-
     }
 
 }
 
 @Composable
-fun TimePreview(){
+fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String?, price: String?) {
+    val df: DateFormat = SimpleDateFormat("hh:mm:ss")
+
+//    Log.d("Total Time", minutes.toString())
+
+    val c = Calendar.getInstance()
+
+    val startHour = c.get(Calendar.HOUR_OF_DAY)
+    val startMinute = c.get(Calendar.MINUTE)
+
+    val endHour = c.get(Calendar.HOUR_OF_DAY)
+    val endMinute = c.get(Calendar.MINUTE)
+
+    val context = LocalContext.current
+
+    var startTime by remember {
+        mutableStateOf("")
+    }
+
+    var endTime by remember {
+        mutableStateOf("")
+    }
+
+    val startTimePicker = TimePickerDialog(
+        context,
+        { t, hourOfDay, minutes ->
+            startTime = "$hourOfDay:$minutes:00"
+        }, startHour, startMinute, false
+    )
+
+    val endTimePicker = TimePickerDialog(
+        context,
+        { t, hourOfDay, minutes ->
+            endTime = "$hourOfDay:$minutes:00"
+        }, endHour, endMinute, false
+    )
+
+    Column{
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Button(
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(180.dp),
+                shape = RoundedCornerShape(22.dp),
+                onClick = {
+                    startTimePicker.show()
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(16, 85, 205))
+            ) {
+                Text(text = "Pick Start Hour", color = Color.White)
+            }
+            Button(
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(180.dp),
+                shape = RoundedCornerShape(22.dp),
+                onClick = {
+                    endTimePicker.show()
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(16, 85, 205))
+            ) {
+                Text(text = "Pick End Hour", color = Color.White)
+            }
+        }
+
+
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxHeight(0.9f)
+            .fillMaxWidth()
+            .padding(horizontal = 50.dp),
+        verticalArrangement = Arrangement.SpaceAround,
+    ) {
+
+        Text(
+            text = "Selected Car: ${carBrand.toString()} ${carModel.toString()}",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Text(text = "Price per hour: RM ${price.toString()}", fontSize = 20.sp,
+            textAlign = TextAlign.Center)
+
+        Text(
+            text = "Selected Date: ${mDate.value}",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
+
+
+
+        Text(text = "Start Time: $startTime", fontSize = 20.sp,
+            textAlign = TextAlign.Center)
+
+
+
+        Text(text = "Start Time: $endTime", fontSize = 20.sp,
+            textAlign = TextAlign.Center)
+
+
+        if (startTime != "" && endTime != "") {
+            var theTime = df.parse(endTime).time - df.parse(startTime).time
+            var minutes = TimeUnit.MILLISECONDS.toMinutes(theTime)
+            var price = (minutes / 60.00) * price.toString().toFloat()
+//            var perHourPrice = price *
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.DOWN
+            val roundedPrice = df.format(price)
+
+            //if minutes and roundedPrice < 0 then remove time for startTime and endTime
+
+            Text(text = "The minute: $minutes", fontSize = 20.sp,
+                textAlign = TextAlign.Center)
+            Text(text = "The price: RM $roundedPrice", fontSize = 20.sp,
+                textAlign = TextAlign.Center)
+        }
+
+
+    }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        Alignment.BottomEnd
+    ) {
+        Button(
+            modifier = Modifier
+                .width(200.dp)
+                .height(70.dp),
+            shape = RoundedCornerShape(topStart = 22.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(16, 85, 205)),
+            onClick = {}) {
+            Text(text = "Add to Cart", color = Color.White)
+        }
+    }
+
 
 }

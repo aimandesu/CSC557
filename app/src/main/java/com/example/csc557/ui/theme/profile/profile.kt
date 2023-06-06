@@ -1,13 +1,14 @@
-package com.example.csc557.profile
+package com.example.csc557.ui.theme.profile
 
 import android.accounts.Account
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.csc557.NavigationItem
+import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.model.AccountUser
@@ -29,12 +31,40 @@ fun profileScreen(
     onSignOut: () -> Unit,
     sharedViewModel: SharedViewModel
 ) {
-    var context = LocalContext.current
+
+    var identityNumber: String by remember { mutableStateOf("") }
+    var fullName: String by remember { mutableStateOf("") }
+    var phoneNumber: String by remember { mutableStateOf("") }
+    var licenseNumber: String by remember { mutableStateOf("") }
+
+//    var account = AccountUser()
+
+    if (userData != null) {
+        sharedViewModel.retrieveSpecificUserData(userData.userId) { AccountUser ->
+            identityNumber = AccountUser.identityNumber
+            fullName = AccountUser.fullName
+            phoneNumber = AccountUser.phoneNumber
+            licenseNumber = AccountUser.licenseNumber
+        }
+//        Log.d("identitynum", identityNumber)
+
+
+//        account = AccountUser(
+//            identityNumber = identityNumber,
+//            fullName = fullName,
+//            phoneNumber = phoneNumber,
+//            licenseNumber = licenseNumber,
+//            googleUID = userData.userId,
+//        )
+        
+    }
+
     Scaffold(
         bottomBar = {
             NavigationItem(navController = navController)
         },
         content = { paddingValues ->
+            
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -102,39 +132,31 @@ fun profileScreen(
                         .padding(horizontal = 20.dp),
                     onClick = {
                         //navigate to screen for enter details, ni right now for testing
-
-//                        if (userData != null) {
-//
-//                            //all except googleUID need to use mutableStateOf, googleUID need to pass to next screen
-//                            var account = AccountUser(
-//                                identityNumber = "",
-//                                fullName = "",
-//                                phoneNumber = "",
-//                                licenseNumber = "",
-//                                googleUID = "",
-//                            )
-//
-//                            sharedViewModel.saveUserData(
-//                                userUID = userData.userId,
-//                                account = account,
-//                                context = context,
-//                            )
-//                        }
+                        if (userData != null) {
+                            navController.navigate(Screen.UpdateProfileScreen.route + "/${userData.userId}")
+                        }
                     },
                 ) {
                     Text(text = "Update Profile")
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceAround
-                ) {
-                    Text(text = "Aiman Afiq")
-                    Text(text = "011-3041")
-                    Text(text = "01191")
-                    Text(text = "01290931")
+                if(identityNumber != ""){
+                    Text(text = identityNumber)
+                    Text(text = fullName)
+                    Text(text = phoneNumber)
+                    Text(text = licenseNumber)
+                }else{
+                    Text(text = "account found")
                 }
-
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize(),
+//                    verticalArrangement = Arrangement.SpaceAround
+//                ) {
+//                    Text(text = "Aiman Afiq")
+//                    Text(text = "011-3041")
+//                    Text(text = "01191")
+//                    Text(text = "01290931")
+//                }
 
             }
         }

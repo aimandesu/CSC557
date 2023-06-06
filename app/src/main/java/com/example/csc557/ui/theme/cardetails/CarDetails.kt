@@ -94,7 +94,7 @@ fun carDetails(
             modifier = Modifier.fillMaxSize(),
             Alignment.BottomCenter
         ) {
-            rentCar(price, navController)
+            rentCar(price, navController, carModel, carBrand)
         }
     }
 
@@ -183,7 +183,7 @@ fun PhotoItem(carParts: ArrayList<String>?, index: Int) {
 }
 
 @Composable
-fun rentCar(price: Double, navController: NavController) {
+fun rentCar(price: Double, navController: NavController, carModel: String?, carBrand: String?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -194,7 +194,7 @@ fun rentCar(price: Double, navController: NavController) {
     ) {
         Text(
             modifier = Modifier.width(200.dp),
-            text = "RM$price/ Per Day",
+            text = "RM$price/ Per Hour",
             fontSize = 20.sp,
             color = Color.White,
             textAlign = TextAlign.Center,
@@ -209,7 +209,7 @@ fun rentCar(price: Double, navController: NavController) {
                 contentColor = Color.White
             ),
             onClick = {
-                navController.navigate(Screen.PaymentDetailScreen.route)
+                navController.navigate(Screen.PaymentDetailScreen.route + "/${carModel}/${carBrand}/${price}")
             }) {
             Text(text = "Rent Now")
         }

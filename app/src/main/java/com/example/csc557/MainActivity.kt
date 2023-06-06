@@ -19,7 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.csc557.ui.theme.cartscreen.cartScreen
-import com.example.csc557.profile.profileScreen
+import com.example.csc557.ui.theme.profile.profileScreen
 import com.example.csc557.ui.theme.allcars.allCars
 import com.example.csc557.ui.theme.boardinglogin.BoardingLogin
 import com.example.csc557.ui.theme.boardinglogin.SignInViewModel
@@ -30,6 +30,7 @@ import com.example.csc557.ui.theme.payment.payment
 import com.example.csc557.ui.theme.search.search
 import androidx.lifecycle.lifecycleScope
 import com.example.csc557.ui.theme.boardinglogin.GoogleAuthUiClient
+import com.example.csc557.ui.theme.updateprofile.updateProfile
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -123,8 +124,25 @@ class MainActivity : ComponentActivity() {
                             navController, sharedViewModel
                         )
                     }
-                    composable(route = Screen.PaymentDetailScreen.route) {
-                        payment(navController = navController)
+                    composable(route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}",
+                        arguments = listOf(
+                            navArgument("carModel") {
+                                type = NavType.StringType
+                            },
+                            navArgument("carBrand") {
+                                type = NavType.StringType
+                            },
+                            navArgument("price") {
+                                type = NavType.StringType
+                            },
+                        )
+                    ) { navBackStackEntry ->
+                        payment(
+                            carModel = navBackStackEntry.arguments?.getString("carModel"),
+                            carBrand = navBackStackEntry.arguments?.getString("carBrand"),
+                            price = navBackStackEntry.arguments?.getString("price"),
+                            navController = navController,
+                        )
                     }
                     composable(route = Screen.SearchScreen.route + "/{searchItem}",
                         arguments = listOf(
@@ -166,6 +184,20 @@ class MainActivity : ComponentActivity() {
                                 }
 
                             },
+                            sharedViewModel,
+                        )
+                    }
+                    composable(
+                        route = Screen.UpdateProfileScreen.route + "/{googleUID}",
+                        arguments = listOf(
+                            navArgument("googleUID") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) { navBackStackEntry ->
+                        updateProfile(
+                            googleUID = navBackStackEntry.arguments?.getString("googleUID"),
+                            navController,
                             sharedViewModel,
                         )
                     }

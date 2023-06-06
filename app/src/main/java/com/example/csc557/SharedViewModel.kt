@@ -1,6 +1,7 @@
 package com.example.csc557
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -39,34 +40,32 @@ class SharedViewModel() : ViewModel() {
         }
     }
 
-//    fun retrieveSpecificUserData(
+    fun retrieveSpecificUserData(
 //        context: Context,
-//        data: (CarData) -> Unit
-//    ) {
-//        val firestoreRef = Firebase
-//            .firestore
-//            .collection("cars")
-//            .document("2ndjJGlVBGLT9l7NKk6F")
-//
-//        try {
-//
-//            firestoreRef.get()
-//                .addOnSuccessListener {
-//                    if (it.exists()) {
-//                        val userData = it.toObject<CarData>()
-//                        if (userData != null) {
-//                            data(userData)
-//
+        userUID: String,
+        data: (AccountUser) -> Unit,
+    ) {
+        Log.d("user uid", userUID)
+        val firestoreRef = Firebase
+            .firestore
+            .collection("user")
+            .document(userUID)
+
+        try {
+            firestoreRef.get()
+                .addOnSuccessListener {
+                    if (it.exists()) {
+                        val userData = it.toObject<AccountUser>()
+                        if (userData != null) {
+                            data(userData)
 //                            Toast.makeText(context, "${userData.model}", Toast.LENGTH_LONG).show()
-//                        }
-//                    }
-//
-//                }
-//
-//        } catch (e: Exception) {
+                        }
+                    }
+                }
+        } catch (e: Exception) {
 //            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-//        }
-//    }
+        }
+    }
 
     //used in cardetails
     fun fetchSpecificCar(
@@ -148,7 +147,7 @@ class SharedViewModel() : ViewModel() {
 //                    Log.d("emem", searchesFound.isEmpty().toString())
 //                    Toast.makeText(context, "No data found in database", Toast.LENGTH_SHORT).show()
                     boolResult(searchesFound.isEmpty())
-                }else{
+                } else {
 //                            Log.d("TAG", searchesFound.isEmpty().toString())
                     boolResult(searchesFound.isEmpty())
 
@@ -168,13 +167,13 @@ class SharedViewModel() : ViewModel() {
         var db: FirebaseFirestore = FirebaseFirestore.getInstance()
         db.collection("cars")
             .get()
-            .addOnSuccessListener {  queryDocumentSnapshots ->
+            .addOnSuccessListener { queryDocumentSnapshots ->
                 if (!queryDocumentSnapshots.isEmpty) {
                     val list = queryDocumentSnapshots.documents
                     for (d in list) {
                         val c: CarData? = d.toObject(CarData::class.java)
                         carList.add(c as CarData)
-                        if(!allCars.contains(c!!.brand)){
+                        if (!allCars.contains(c!!.brand)) {
                             allCars.add(c!!.brand)
                         }
                     }
