@@ -121,7 +121,9 @@ class MainActivity : ComponentActivity() {
                         carDetails(
                             carModel = navBackStackEntry.arguments?.getString("carModel"),
                             carBrand = navBackStackEntry.arguments?.getString("carBrand"),
-                            navController, sharedViewModel
+                            navController,
+                            googleAuthUiClient.getSignedInUser(),
+                            sharedViewModel
                         )
                     }
                     composable(route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}",

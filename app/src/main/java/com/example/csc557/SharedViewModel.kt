@@ -40,6 +40,30 @@ class SharedViewModel() : ViewModel() {
         }
     }
 
+    fun checkIfUserHasDetail(
+        userUID: String,
+        data: (Boolean) -> Unit
+    ){
+        val firestoreRef = Firebase
+            .firestore
+            .collection("user")
+            .document(userUID)
+
+        try {
+            firestoreRef.get()
+                .addOnSuccessListener {
+                    if (it.exists()) {
+                        val userData = it.toObject<AccountUser>()
+                        if (userData != null) {
+                            data(true)
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+//            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
     fun retrieveSpecificUserData(
 //        context: Context,
         userUID: String,

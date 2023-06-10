@@ -145,7 +145,7 @@ fun profileScreen(
                     Text(text = phoneNumber)
                     Text(text = licenseNumber)
                 }else{
-                    Text(text = "account found")
+                    Text(text = "account not found")
                 }
 //                Column(
 //                    modifier = Modifier

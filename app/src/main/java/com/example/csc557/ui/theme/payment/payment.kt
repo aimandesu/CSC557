@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.util.Log
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -30,9 +31,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Composable
-fun payment(navController: NavController, carModel: String?,
-            carBrand: String?, price: String?) {
+fun payment(
+    navController: NavController, carModel: String?,
+    carBrand: String?, price: String?
+) {
     val mDate = remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier
@@ -123,8 +127,26 @@ fun calenderPreview(mDate: MutableState<String>) {
 
 }
 
+
+
+
 @Composable
-fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String?, price: String?) {
+fun TimePreview(
+    mDate: MutableState<String>,
+    carBrand: String?,
+    carModel: String?,
+    price: String?,
+) {
+    val context = LocalContext.current
+
+    fun checkIfCanProceed(dateChoose: String, price: String) {
+        if (dateChoose != "" && price != "") {
+//            navController.navigate()
+            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()
+        }
+    }
+    var roundedPrice = ""
+
     val df: DateFormat = SimpleDateFormat("hh:mm:ss")
 
 //    Log.d("Total Time", minutes.toString())
@@ -137,7 +159,7 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
     val endHour = c.get(Calendar.HOUR_OF_DAY)
     val endMinute = c.get(Calendar.MINUTE)
 
-    val context = LocalContext.current
+
 
     var startTime by remember {
         mutableStateOf("")
@@ -161,7 +183,7 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
         }, endHour, endMinute, false
     )
 
-    Column{
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -210,8 +232,10 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
             textAlign = TextAlign.Center
         )
 
-        Text(text = "Price per hour: RM ${price.toString()}", fontSize = 20.sp,
-            textAlign = TextAlign.Center)
+        Text(
+            text = "Price per hour: RM ${price.toString()}", fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
 
         Text(
             text = "Selected Date: ${mDate.value}",
@@ -221,13 +245,17 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
 
 
 
-        Text(text = "Start Time: $startTime", fontSize = 20.sp,
-            textAlign = TextAlign.Center)
+        Text(
+            text = "Start Time: $startTime", fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
 
 
 
-        Text(text = "Start Time: $endTime", fontSize = 20.sp,
-            textAlign = TextAlign.Center)
+        Text(
+            text = "End Time: $endTime", fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
 
 
         if (startTime != "" && endTime != "") {
@@ -237,17 +265,24 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
 //            var perHourPrice = price *
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.DOWN
-            val roundedPrice = df.format(price)
+            roundedPrice = df.format(price)
 
             //if minutes and roundedPrice < 0 then remove time for startTime and endTime
-
-            Text(text = "The minute: $minutes", fontSize = 20.sp,
-                textAlign = TextAlign.Center)
-            Text(text = "The price: RM $roundedPrice", fontSize = 20.sp,
-                textAlign = TextAlign.Center)
+            if (minutes < 0 && price < 0.00) {
+                startTime = ""
+                endTime = ""
+                Toast.makeText(context, "Please select time correctly", Toast.LENGTH_LONG).show()
+            } else {
+                Text(
+                    text = "The minute: $minutes", fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "The price: RM $roundedPrice", fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
-
-
     }
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -259,7 +294,9 @@ fun TimePreview(mDate: MutableState<String>, carBrand: String?, carModel: String
                 .height(70.dp),
             shape = RoundedCornerShape(topStart = 22.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(16, 85, 205)),
-            onClick = {}) {
+            onClick = {
+                checkIfCanProceed(mDate.value, roundedPrice)
+            }) {
             Text(text = "Add to Cart", color = Color.White)
         }
     }

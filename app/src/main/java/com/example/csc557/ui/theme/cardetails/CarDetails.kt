@@ -27,20 +27,54 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.csc557.R
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
+import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
+import com.example.csc557.ui.theme.components.customdialog.customDialog
 import com.example.csc557.ui.theme.model.Car
 
+
+//@Composable
+//private fun showDialog() {
+//    var showDialog by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//        Button(onClick = {
+//            showDialog = true
+//        }) {
+//            Text(text = "Show dialog")
+//        }
+//
+//        if(showDialog){
+//            customDialog(
+//                title = "tst",
+//                message = "Test",
+//                onDismiss = { showDialog = false },
+//                onConfirm = { showDialog = false},
+//                onCancel = { showDialog = false })
+//        }
+//    }
+//
+//}
 
 @Composable
 fun carDetails(
     carModel: String?,
     carBrand: String?,
     navController: NavController,
+    userData: UserData?,
     sharedViewModel: SharedViewModel
 ) {
 
@@ -53,6 +87,7 @@ fun carDetails(
         mutableStateOf(ArrayList())
     }
     var image: String by remember { mutableStateOf("") }
+    var userAvailable: Boolean by remember { mutableStateOf(false) }
 
     sharedViewModel.fetchSpecificCar(carModel.toString()) { carData ->
         brand = carData.brand
@@ -61,6 +96,10 @@ fun carDetails(
         year = carData.year
         carPart = carData.carParts
         image = carData.image
+    }
+
+    sharedViewModel.checkIfUserHasDetail(userData!!.userId) { UserAvailable ->
+        userAvailable = UserAvailable
     }
 
     Column(
@@ -94,7 +133,7 @@ fun carDetails(
             modifier = Modifier.fillMaxSize(),
             Alignment.BottomCenter
         ) {
-            rentCar(price, navController, carModel, carBrand)
+            rentCar(price, navController, carModel, carBrand, userAvailable)
         }
     }
 
@@ -141,7 +180,9 @@ fun carImage(imageString: String) {
 @Composable
 fun carParts(carParts: ArrayList<String>?) {
     LazyVerticalGrid(
-//        modifier = Modifier.height(300.dp),
+        modifier = Modifier
+            .height(250.dp)
+            .fillMaxWidth(),
         columns = GridCells.Adaptive(minSize = 128.dp)
     ) {
 
@@ -183,7 +224,34 @@ fun PhotoItem(carParts: ArrayList<String>?, index: Int) {
 }
 
 @Composable
-fun rentCar(price: Double, navController: NavController, carModel: String?, carBrand: String?) {
+fun rentCar(
+    price: Double,
+    navController: NavController,
+    carModel: String?,
+    carBrand: String?,
+    userAvailable: Boolean
+) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showDialog) {
+        customDialog(
+            title = "Account Details",
+            message = "Account Details not available. \nPlease make account details first before renting car.\nThank You!",
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                navController.navigate(Screen.ProfileScreen.route)
+            },
+            onCancel = { showDialog = false },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,7 +277,11 @@ fun rentCar(price: Double, navController: NavController, carModel: String?, carB
                 contentColor = Color.White
             ),
             onClick = {
-                navController.navigate(Screen.PaymentDetailScreen.route + "/${carModel}/${carBrand}/${price}")
+                if (!userAvailable) {
+                    showDialog = true
+                } else {
+                    navController.navigate(Screen.PaymentDetailScreen.route + "/${carModel}/${carBrand}/${price}")
+                }
             }) {
             Text(text = "Rent Now")
         }
