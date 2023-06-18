@@ -165,7 +165,7 @@ class MainActivity : ComponentActivity() {
                         allCars(navController = navController, sharedViewModel)
                     }
                     composable(route = Screen.CartScreen.route) {
-                        cartScreen(navController)
+                        cartScreen(navController, sharedViewModel,  googleAuthUiClient.getSignedInUser(), )
                     }
                     composable(route = Screen.ProfileScreen.route) {
                         profileScreen(

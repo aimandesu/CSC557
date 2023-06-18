@@ -205,7 +205,7 @@ fun TimePreview(
             )
 //            navController.navigate()
 //            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()
-            sharedViewModel.rentCar(googleUID, rent)
+            sharedViewModel.rentCar(rent)
             showDialog = true
         } else {
             Toast.makeText(context, "Some details is empty", Toast.LENGTH_LONG).show()

@@ -16,29 +16,46 @@ import com.google.firebase.ktx.Firebase
 
 class SharedViewModel() : ViewModel() {
 
-//    fun firstAppLogin(
-//        userUID:
-//    )
+    fun fetchRent(
+        googleUID: String,
+        boolResult: (Boolean) -> Unit
+    ): SnapshotStateList<Rent> {
+        var rentFound = mutableStateListOf<Rent>()
+
+        var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+        db.collection("rent")
+            .whereEqualTo("googleUID", googleUID)
+            .whereEqualTo("paid", false)
+            .get()
+            .addOnSuccessListener {
+                queryDocumentSnapshots ->
+                if (!queryDocumentSnapshots.isEmpty){
+                    val list = queryDocumentSnapshots.documents
+                    for (d in list){
+                        val c: Rent? = d.toObject(Rent::class.java)
+                        rentFound.add(c as Rent)
+                    }
+                    boolResult(rentFound.isEmpty())
+                }else{
+                    boolResult(rentFound.isEmpty())
+                }
+            }
+        return rentFound
+
+    }
 
     fun rentCar(
-        userUID: String,
         rent: Rent
     ){
-
-
         val firestoreRef = Firebase
             .firestore
             .collection("rent")
             .document()
 
-
-
         try{
             firestoreRef.set(rent)
-
         }
         catch (e: Exception){
-
         }
     }
 
