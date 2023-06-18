@@ -8,6 +8,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.csc557.ui.theme.model.AccountUser
 import com.example.csc557.ui.theme.model.CarData
+import com.example.csc557.ui.theme.model.Rent
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -18,6 +19,28 @@ class SharedViewModel() : ViewModel() {
 //    fun firstAppLogin(
 //        userUID:
 //    )
+
+    fun rentCar(
+        userUID: String,
+        rent: Rent
+    ){
+
+
+        val firestoreRef = Firebase
+            .firestore
+            .collection("rent")
+            .document()
+
+
+
+        try{
+            firestoreRef.set(rent)
+
+        }
+        catch (e: Exception){
+
+        }
+    }
 
     fun saveUserData(
         userUID: String,

@@ -56,7 +56,11 @@ fun NavigationItem(navController: NavController) {
                     )
                 },
                 onClick = {
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(Screen.HomeScreen.route){
+                        popUpTo(navController.graph.id){
+                            inclusive = true
+                        }
+                    }
                 },
             )
             BottomNavigationItem(
@@ -73,7 +77,11 @@ fun NavigationItem(navController: NavController) {
                     )
                 },
                 onClick = {
-                    navController.navigate(Screen.CartScreen.route)
+                    navController.navigate(Screen.CartScreen.route){
+                        popUpTo(navController.graph.id){
+                            inclusive = true
+                        }
+                    }
                 },
             )
             BottomNavigationItem(
@@ -90,7 +98,11 @@ fun NavigationItem(navController: NavController) {
                     )
                 },
                 onClick = {
-                    navController.navigate(Screen.ProfileScreen.route)
+                    navController.navigate(Screen.ProfileScreen.route){
+                        popUpTo(navController.graph.id){
+                            inclusive = true
+                        }
+                    }
                 },
             )
         }

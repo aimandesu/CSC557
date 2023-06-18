@@ -22,18 +22,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.csc557.Screen
+import com.example.csc557.SharedViewModel
+import com.example.csc557.ui.theme.components.customdialog.customDialog
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.example.csc557.ui.theme.boardinglogin.UserData
+import com.example.csc557.ui.theme.model.Rent
 
 @Composable
 fun payment(
-    navController: NavController, carModel: String?,
-    carBrand: String?, price: String?
+    navController: NavController,
+    carModel: String?,
+    carBrand: String?,
+    price: String?,
+    sharedViewModel: SharedViewModel,
+    userData: UserData?
 ) {
     val mDate = remember { mutableStateOf("") }
 
@@ -59,7 +69,15 @@ fun payment(
             }
         )
         calenderPreview(mDate)
-        TimePreview(mDate, carBrand, carModel, price)
+        TimePreview(
+            mDate,
+            carBrand,
+            carModel,
+            price,
+            navController,
+            sharedViewModel,
+            userData!!.userId
+        )
     }
 }
 
@@ -128,23 +146,72 @@ fun calenderPreview(mDate: MutableState<String>) {
 }
 
 
-
-
 @Composable
 fun TimePreview(
     mDate: MutableState<String>,
     carBrand: String?,
     carModel: String?,
     price: String?,
+    navController: NavController,
+    sharedViewModel: SharedViewModel,
+    googleUID: String
 ) {
     val context = LocalContext.current
 
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var startTime by remember {
+        mutableStateOf("")
+    }
+
+    var endTime by remember {
+        mutableStateOf("")
+    }
+
+    if (showDialog) {
+        customDialog(
+            title = "Car is added to cart",
+            message = "Go to cart?",
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                navController.navigate(Screen.CartScreen.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+            },
+            onCancel = {
+                showDialog = false
+                navController.navigateUp()
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
+
     fun checkIfCanProceed(dateChoose: String, price: String) {
         if (dateChoose != "" && price != "") {
+            var rent = Rent(
+                googleUID = googleUID,
+                carRent = "${carBrand.toString()} ${carModel.toString()}",
+                startTime = startTime,
+                endTime = endTime,
+                totalPrice = price.toDouble()
+            )
 //            navController.navigate()
-            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()
+//            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()
+            sharedViewModel.rentCar(googleUID, rent)
+            showDialog = true
+        } else {
+            Toast.makeText(context, "Some details is empty", Toast.LENGTH_LONG).show()
         }
     }
+
     var roundedPrice = ""
 
     val df: DateFormat = SimpleDateFormat("hh:mm:ss")
@@ -159,15 +226,6 @@ fun TimePreview(
     val endHour = c.get(Calendar.HOUR_OF_DAY)
     val endMinute = c.get(Calendar.MINUTE)
 
-
-
-    var startTime by remember {
-        mutableStateOf("")
-    }
-
-    var endTime by remember {
-        mutableStateOf("")
-    }
 
     val startTimePicker = TimePickerDialog(
         context,

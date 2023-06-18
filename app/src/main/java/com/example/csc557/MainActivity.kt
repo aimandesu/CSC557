@@ -144,6 +144,8 @@ class MainActivity : ComponentActivity() {
                             carBrand = navBackStackEntry.arguments?.getString("carBrand"),
                             price = navBackStackEntry.arguments?.getString("price"),
                             navController = navController,
+                            sharedViewModel = sharedViewModel,
+                            userData = googleAuthUiClient.getSignedInUser(),
                         )
                     }
                     composable(route = Screen.SearchScreen.route + "/{searchItem}",
