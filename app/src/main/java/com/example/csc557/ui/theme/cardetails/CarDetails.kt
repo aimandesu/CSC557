@@ -37,6 +37,8 @@ import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.bottomnavigation.bottomNavigation
 import com.example.csc557.ui.theme.components.customdialog.customDialog
 import com.example.csc557.ui.theme.model.Car
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 //@Composable
@@ -133,7 +135,7 @@ fun carDetails(
             modifier = Modifier.fillMaxSize(),
             Alignment.BottomCenter
         ) {
-            rentCar(price, navController, carModel, carBrand, userAvailable)
+            rentCar(price, navController, carModel, carBrand, userAvailable, image)
         }
     }
 
@@ -229,8 +231,11 @@ fun rentCar(
     navController: NavController,
     carModel: String?,
     carBrand: String?,
-    userAvailable: Boolean
+    userAvailable: Boolean,
+    imageString: String
 ) {
+    val encodedUrl = URLEncoder.encode(imageString, StandardCharsets.UTF_8.toString())
+
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -280,7 +285,7 @@ fun rentCar(
                 if (!userAvailable) {
                     showDialog = true
                 } else {
-                    navController.navigate(Screen.PaymentDetailScreen.route + "/${carModel}/${carBrand}/${price}")
+                    navController.navigate(Screen.PaymentDetailScreen.route + "/${carModel}/${carBrand}/${price}/${encodedUrl}")
                 }
             }) {
             Text(text = "Rent Now")

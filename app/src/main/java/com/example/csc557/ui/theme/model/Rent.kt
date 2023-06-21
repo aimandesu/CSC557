@@ -7,4 +7,5 @@ data class Rent(
     var endTime: String = "",
     var totalPrice: Double = 0.0,
     var paid: Boolean = false,
+    var image: String = "",
 )

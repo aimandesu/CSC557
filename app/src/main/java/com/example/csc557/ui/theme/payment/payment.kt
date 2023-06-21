@@ -42,6 +42,7 @@ fun payment(
     carModel: String?,
     carBrand: String?,
     price: String?,
+    imageString: String?,
     sharedViewModel: SharedViewModel,
     userData: UserData?
 ) {
@@ -76,7 +77,8 @@ fun payment(
             price,
             navController,
             sharedViewModel,
-            userData!!.userId
+            userData!!.userId,
+            imageString,
         )
     }
 }
@@ -154,7 +156,8 @@ fun TimePreview(
     price: String?,
     navController: NavController,
     sharedViewModel: SharedViewModel,
-    googleUID: String
+    googleUID: String,
+    imageString: String?,
 ) {
     val context = LocalContext.current
 
@@ -201,7 +204,8 @@ fun TimePreview(
                 carRent = "${carBrand.toString()} ${carModel.toString()}",
                 startTime = startTime,
                 endTime = endTime,
-                totalPrice = price.toDouble()
+                totalPrice = price.toDouble(),
+                image = imageString.toString()
             )
 //            navController.navigate()
 //            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()

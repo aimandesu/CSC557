@@ -126,7 +126,7 @@ class MainActivity : ComponentActivity() {
                             sharedViewModel
                         )
                     }
-                    composable(route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}",
+                    composable(route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}/{carImage}",
                         arguments = listOf(
                             navArgument("carModel") {
                                 type = NavType.StringType
@@ -137,12 +137,16 @@ class MainActivity : ComponentActivity() {
                             navArgument("price") {
                                 type = NavType.StringType
                             },
+                            navArgument("carImage") {
+                                type = NavType.StringType
+                            },
                         )
                     ) { navBackStackEntry ->
                         payment(
                             carModel = navBackStackEntry.arguments?.getString("carModel"),
                             carBrand = navBackStackEntry.arguments?.getString("carBrand"),
                             price = navBackStackEntry.arguments?.getString("price"),
+                            imageString = navBackStackEntry.arguments?.getString("carImage"),
                             navController = navController,
                             sharedViewModel = sharedViewModel,
                             userData = googleAuthUiClient.getSignedInUser(),
