@@ -1,6 +1,7 @@
 package com.example.csc557.ui.theme.cartscreen
 
 import android.text.method.Touch
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,11 +12,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +28,7 @@ import com.airbnb.lottie.compose.*
 import com.example.csc557.NavigationItem
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
+import com.example.csc557.ui.theme.model.Rent
 import com.example.csc557.R as res
 
 @Composable
@@ -95,10 +99,13 @@ fun cartScreen(
                                     theList[index].carRent,
                                     theList[index].totalPrice.toString(),
                                     theList[index].image,
+                                    theList,
+                                    theList[index],
+                                    sharedViewModel
                                 )
                             }
                         }
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = {}) {
                             Text(text = "TEst")
                         }
                     }
@@ -115,7 +122,12 @@ fun productsCard(
     title: String,
     price: String,
     carImage: String,
+    theList: SnapshotStateList<Rent>,
+    deleteRent: Rent,
+    sharedViewModel: SharedViewModel
 ) {
+
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -168,6 +180,14 @@ fun productsCard(
                         fontSize = 20.sp,
                         color = Color.Black
                     )
+                    Button(onClick = {
+                        //here fire the sharedviewmodel logic to delete
+                        sharedViewModel.deleteRent(context, deleteRent.rentID)
+                        Log.d("rent id", deleteRent.rentID)
+                        theList.remove(deleteRent)
+                    }) {
+                        Text(text = "Delete")
+                    }
                 }
                 Image(
                     modifier = Modifier

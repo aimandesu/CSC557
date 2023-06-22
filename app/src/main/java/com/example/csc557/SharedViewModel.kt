@@ -16,6 +16,26 @@ import com.google.firebase.ktx.Firebase
 
 class SharedViewModel() : ViewModel() {
 
+    fun deleteRent(
+        context: Context,
+        rentID: String
+    ) {
+        var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("rent")
+
+        collectionRef.whereEqualTo("rentID", rentID)
+            .get()
+            .addOnSuccessListener {
+                val batch = FirebaseFirestore.getInstance().batch()
+                val documentRef = collectionRef.document(rentID)
+                batch.delete(documentRef)
+
+                batch.commit().addOnSuccessListener {
+                    Toast.makeText(context, "successful delete rent", Toast.LENGTH_LONG).show()
+                }
+            }
+    }
+
     fun fetchRent(
         googleUID: String,
         boolResult: (Boolean) -> Unit
@@ -27,16 +47,15 @@ class SharedViewModel() : ViewModel() {
             .whereEqualTo("googleUID", googleUID)
             .whereEqualTo("paid", false)
             .get()
-            .addOnSuccessListener {
-                queryDocumentSnapshots ->
-                if (!queryDocumentSnapshots.isEmpty){
+            .addOnSuccessListener { queryDocumentSnapshots ->
+                if (!queryDocumentSnapshots.isEmpty) {
                     val list = queryDocumentSnapshots.documents
-                    for (d in list){
+                    for (d in list) {
                         val c: Rent? = d.toObject(Rent::class.java)
                         rentFound.add(c as Rent)
                     }
                     boolResult(rentFound.isEmpty())
-                }else{
+                } else {
                     boolResult(rentFound.isEmpty())
                 }
             }
@@ -46,16 +65,23 @@ class SharedViewModel() : ViewModel() {
 
     fun rentCar(
         rent: Rent
-    ){
+    ) {
         val firestoreRef = Firebase
             .firestore
             .collection("rent")
             .document()
 
-        try{
-            firestoreRef.set(rent)
-        }
-        catch (e: Exception){
+        try {
+            firestoreRef
+                .set(rent)
+                .addOnSuccessListener {
+                    val id = firestoreRef.id
+                    val updates = hashMapOf<String, Any>(
+                        "rentID" to id,
+                    )
+                    firestoreRef.update(updates)
+                }
+        } catch (e: Exception) {
         }
     }
 
@@ -83,7 +109,7 @@ class SharedViewModel() : ViewModel() {
     fun checkIfUserHasDetail(
         userUID: String,
         data: (Boolean) -> Unit
-    ){
+    ) {
         val firestoreRef = Firebase
             .firestore
             .collection("user")
