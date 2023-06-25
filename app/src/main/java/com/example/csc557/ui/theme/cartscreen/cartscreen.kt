@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -99,18 +102,30 @@ fun cartScreen(
                                     theList[index].carRent,
                                     theList[index].totalPrice.toString(),
                                     theList[index].image,
+                                    theList[index].date,
+                                    theList[index].startTime,
+                                    theList[index].endTime,
                                     theList,
                                     theList[index],
                                     sharedViewModel
                                 )
                             }
                         }
-                        Button(onClick = {}) {
-                            Text(text = "TEst")
+                        Button(
+                            modifier = Modifier
+                                .height(70.dp)
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp, horizontal = 5.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(16, 85, 205)
+                            ),
+                            onClick = {
+
+                            },
+                        ) {
+                            Text(text = "Pay Now", color = Color.White)
                         }
                     }
-                    
-
                 }
             }
         }
@@ -122,85 +137,175 @@ fun productsCard(
     title: String,
     price: String,
     carImage: String,
+    date: String,
+    startTime: String,
+    endTime: String,
     theList: SnapshotStateList<Rent>,
     deleteRent: Rent,
     sharedViewModel: SharedViewModel
 ) {
 
     val context = LocalContext.current
+    val expanded = remember { mutableStateOf(false) }
+    val extraPadding = if (expanded.value) 0.98f else 1f
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
+            .height(200.dp)
             .padding(10.dp),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomEnd
     ) {
-        Card(
+        Row(
             Modifier
-                .fillMaxWidth()
-                .height(150.dp),
-            shape = RoundedCornerShape(
-                topStart = 16.dp,
-                bottomEnd = 16.dp,
-                topEnd = 5.dp,
-                bottomStart = 5.dp
-            ),
-            backgroundColor = Color.Blue,
-            elevation = 0.dp
+                .fillMaxWidth(extraPadding),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Row(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                Color(16, 85, 205),
-                                Color.White,
-                            )
-                        )
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(
+            if (expanded.value) {
+                IconButton(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(start = 32.dp),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = price,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
-                    Button(onClick = {
-                        //here fire the sharedviewmodel logic to delete
+                        .height(30.dp)
+                        .width(30.dp),
+                    onClick = {
                         sharedViewModel.deleteRent(context, deleteRent.rentID)
-                        Log.d("rent id", deleteRent.rentID)
                         theList.remove(deleteRent)
                     }) {
-                        Text(text = "Delete")
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+                }
+            }
+            Column {
+                Card(
+                    Modifier
+                        .fillMaxWidth(extraPadding)
+                        .height(150.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        bottomEnd = 16.dp,
+                        topEnd = 5.dp,
+                        bottomStart = 5.dp
+                    ),
+//                    backgroundColor = Color.Blue,
+                    elevation = 0.dp
+                ) {
+                    Row(
+                        modifier = Modifier
+//                        .matchParentSize()
+                            .fillMaxSize()
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(16, 85, 205),
+                                        Color.White,
+                                    )
+                                )
+                            ),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            modifier = Modifier
+                                .height(30.dp)
+                                .width(30.dp),
+                            onClick = {
+                                expanded.value = !expanded.value
+                            },
+                        ) {
+                            if (expanded.value) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowForward,
+                                    contentDescription = null
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(0.5f)
+                                .padding(start = 32.dp),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = title,
+                                fontSize = 20.sp,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "RM$price",
+                                fontSize = 20.sp,
+                                color = Color.Black
+                            )
+                        }
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(5.dp),
+                            painter = rememberImagePainter(carImage),
+                            contentDescription = "",
+                            contentScale = ContentScale.FillHeight,
+//                    alignment = Alignment.Center,
+                        )
                     }
                 }
-                Image(
+                Surface(
                     modifier = Modifier
+                        .height(70.dp)
                         .fillMaxWidth()
-                        .padding(5.dp),
-                    painter = rememberImagePainter(carImage),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-//                    alignment = Alignment.Center,
-                )
+                        .padding(top = 5.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        bottomEnd = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 16.dp
+                    ),
+                ) {
+                    Row(
+                        modifier = Modifier
+
+
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(16, 85, 205),
+                                        Color.White,
+                                    )
+                                )
+                            ),
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = 5.dp),
+                            text = date,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            text = startTime,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = " | ",
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            modifier = Modifier.padding(end = 5.dp),
+                            text = endTime,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
+
             }
         }
-
-
     }
 }

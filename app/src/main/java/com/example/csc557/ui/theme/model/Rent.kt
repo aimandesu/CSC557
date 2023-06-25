@@ -9,4 +9,5 @@ data class Rent(
     var paid: Boolean = false,
     var image: String = "",
     var rentID: String = "",
+    var date: String = ""
 )

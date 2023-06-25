@@ -205,7 +205,8 @@ fun TimePreview(
                 startTime = startTime,
                 endTime = endTime,
                 totalPrice = price.toDouble(),
-                image = imageString.toString()
+                image = imageString.toString(),
+                date = dateChoose,
             )
 //            navController.navigate()
 //            Toast.makeText(context, "$dateChoose $price", Toast.LENGTH_LONG).show()
