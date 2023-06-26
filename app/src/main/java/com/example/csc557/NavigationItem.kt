@@ -26,13 +26,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun NavigationItem(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Box(
-        modifier = Modifier
-//            .padding(top = 10.dp)
-            .background(color = Color.Black)
-    ) {
-        BottomNavigation(
-            elevation = 40.dp,
+//    Box(
+//        modifier = Modifier
+////            .padding(top = 10.dp)
+//            .background(color = Color.Black)
+//    ) {
+    BottomNavigation(
+        elevation = 40.dp,
         modifier =
         Modifier
             .padding(top = 2.dp),
@@ -40,72 +40,73 @@ fun NavigationItem(navController: NavController) {
 //            .shadow(AppBarDefaults.TopAppBarElevation)
 //            .zIndex(1f),
 ////            .padding(25.dp),
-            backgroundColor = Color.White
-        ) {
-            BottomNavigationItem(
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == Screen.HomeScreen.route
-                } == true,
-                label = {
-                    Text(text = "home")
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.Home,
-                        contentDescription = "Navigation Icon"
-                    )
-                },
-                onClick = {
-                    navController.navigate(Screen.HomeScreen.route){
-                        popUpTo(navController.graph.id){
-                            inclusive = true
-                        }
+        backgroundColor = Color.White, // Color(16, 85, 205),
+        contentColor = Color.Black,
+    ) {
+        BottomNavigationItem(
+            selected = currentDestination?.hierarchy?.any {
+                it.route == Screen.HomeScreen.route
+            } == true,
+            label = {
+                Text(text = "home")
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.Home,
+                    contentDescription = "Navigation Icon"
+                )
+            },
+            onClick = {
+                navController.navigate(Screen.HomeScreen.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
                     }
-                },
-            )
-            BottomNavigationItem(
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == Screen.CartScreen.route
-                } == true,
-                label = {
-                    Text(text = "cart")
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.ShoppingCart,
-                        contentDescription = "Navigation Icon"
-                    )
-                },
-                onClick = {
-                    navController.navigate(Screen.CartScreen.route){
-                        popUpTo(navController.graph.id){
-                            inclusive = true
-                        }
+                }
+            },
+        )
+        BottomNavigationItem(
+            selected = currentDestination?.hierarchy?.any {
+                it.route == Screen.CartScreen.route
+            } == true,
+            label = {
+                Text(text = "cart")
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.ShoppingCart,
+                    contentDescription = "Navigation Icon"
+                )
+            },
+            onClick = {
+                navController.navigate(Screen.CartScreen.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
                     }
-                },
-            )
-            BottomNavigationItem(
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == Screen.ProfileScreen.route
-                } == true,
-                label = {
-                    Text(text = "profile")
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.AccountBox,
-                        contentDescription = "Navigation Icon"
-                    )
-                },
-                onClick = {
-                    navController.navigate(Screen.ProfileScreen.route){
-                        popUpTo(navController.graph.id){
-                            inclusive = true
-                        }
+                }
+            },
+        )
+        BottomNavigationItem(
+            selected = currentDestination?.hierarchy?.any {
+                it.route == Screen.ProfileScreen.route
+            } == true,
+            label = {
+                Text(text = "profile")
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.AccountBox,
+                    contentDescription = "Navigation Icon"
+                )
+            },
+            onClick = {
+                navController.navigate(Screen.ProfileScreen.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
                     }
-                },
-            )
-        }
+                }
+            },
+        )
     }
+//    }
 
 }

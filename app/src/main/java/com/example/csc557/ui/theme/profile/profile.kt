@@ -2,8 +2,13 @@ package com.example.csc557.ui.theme.profile
 
 import android.accounts.Account
 import android.util.Log
+import android.widget.Space
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -12,17 +17,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.*
 import com.example.csc557.NavigationItem
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.model.AccountUser
+import com.example.csc557.R as res
 
 @Composable
 fun profileScreen(
@@ -56,7 +64,7 @@ fun profileScreen(
 //            licenseNumber = licenseNumber,
 //            googleUID = userData.userId,
 //        )
-        
+
     }
 
     Scaffold(
@@ -64,7 +72,7 @@ fun profileScreen(
             NavigationItem(navController = navController)
         },
         content = { paddingValues ->
-            
+
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -139,13 +147,40 @@ fun profileScreen(
                 ) {
                     Text(text = "Update Profile")
                 }
-                if(identityNumber != ""){
-                    Text(text = identityNumber)
-                    Text(text = fullName)
-                    Text(text = phoneNumber)
-                    Text(text = licenseNumber)
-                }else{
-                    Text(text = "account not found")
+                if (identityNumber != "") {
+                    fourGrid(
+                        identityNumber,
+                        fullName,
+                        phoneNumber,
+                        licenseNumber,
+                    )
+                } else {
+
+                    val composition by rememberLottieComposition(
+                        spec = LottieCompositionSpec.RawRes(
+                            res.raw.create_account
+                        )
+                    )
+
+                    val progress by animateLottieCompositionAsState(
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever
+                    )
+
+                    LottieAnimation(
+                        modifier = Modifier
+                            .size(300.dp)
+                            .align(Alignment.CenterHorizontally),
+                        composition = composition,
+                        progress = { progress },
+                    )
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Please Fill in your details before renting car.\n Thank You! ヽ(・∀・)ﾉ",
+                        textAlign = TextAlign.Center,
+                        fontSize = 25.sp
+                    )
                 }
 //                Column(
 //                    modifier = Modifier
@@ -161,5 +196,59 @@ fun profileScreen(
             }
         }
     )
+
+}
+
+@Composable
+fun fourGrid(
+    identityNumber: String,
+    fullName: String,
+    phoneNumber: String,
+    licenseNumber: String,
+) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize(),
+        columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        item {
+            GridItem(identityNumber, "IC NO")
+        }
+        item {
+            GridItem(fullName, "FULL NAME")
+        }
+        item {
+            GridItem(phoneNumber, "PHONE NUMBER")
+        }
+        item {
+            GridItem(licenseNumber, "LICENSE NUMBER")
+        }
+    }
+}
+
+@Composable
+fun GridItem(item: String, title: String) {
+    Surface(
+        modifier = Modifier
+            .height(200.dp)
+            .padding(8.dp),
+        shape = RoundedCornerShape(22.dp),
+        border = BorderStroke(1.dp, Color.Black),
+        elevation = 10.dp,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column() {
+                Text(text = title, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = item, fontSize = 17.sp)
+            }
+
+        }
+    }
 
 }

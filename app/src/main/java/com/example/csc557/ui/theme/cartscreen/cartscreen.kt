@@ -2,6 +2,8 @@ package com.example.csc557.ui.theme.cartscreen
 
 import android.text.method.Touch
 import android.util.Log
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -147,7 +149,12 @@ fun productsCard(
 
     val context = LocalContext.current
     val expanded = remember { mutableStateOf(false) }
-    val extraPadding = if (expanded.value) 0.98f else 1f
+    val extraPadding = animateFloatAsState(
+        targetValue = if (expanded.value) 0.98f else 1f,
+        animationSpec = tween(durationMillis = 500)
+    ).value
+
+
 
     Box(
         modifier = Modifier
@@ -186,7 +193,7 @@ fun productsCard(
                         bottomStart = 5.dp
                     ),
 //                    backgroundColor = Color.Blue,
-                    elevation = 0.dp
+                    elevation = 15.dp,
                 ) {
                     Row(
                         modifier = Modifier
@@ -265,6 +272,7 @@ fun productsCard(
                         topEnd = 16.dp,
                         bottomStart = 16.dp
                     ),
+                    elevation = 10.dp,
                 ) {
                     Row(
                         modifier = Modifier

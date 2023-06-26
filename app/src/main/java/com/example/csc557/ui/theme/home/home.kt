@@ -163,7 +163,8 @@ fun viewAllCars(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .height(230.dp)
-            .padding(10.dp)
+            .padding(10.dp),
+        elevation = 10.dp,
     ) {
         Image(
             painter = rememberImagePainter("https://wallpaperaccess.com/full/40047.jpg"),
@@ -209,7 +210,7 @@ fun hotDeals(navController: NavController) {
         modifier =
         Modifier
             .fillMaxWidth()
-            .height(35.dp)
+            .height(23.dp)
             .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -230,7 +231,7 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
         Modifier
 //                .horizontalScroll(scrollState)
             .fillMaxWidth(1f)
-            .height(300.dp)
+            .height(295.dp)
             .padding(10.dp)
     ) {
         itemsIndexed(theList) { index, item ->
@@ -239,6 +240,7 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
                 Surface(
                     shape = RoundedCornerShape(22.dp),
                     modifier = Modifier.padding(5.dp),
+                    elevation = 10.dp,
 //                    elevation = 15.dp
                 ) {
                     Box(
