@@ -234,8 +234,8 @@ fun GridItem(item: String, title: String) {
             .height(200.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(22.dp),
-        border = BorderStroke(1.dp, Color.Black),
-        elevation = 10.dp,
+//        border = BorderStroke(1.dp, Color.Black),
+        elevation = 30.dp,
     ) {
         Box(
             modifier = Modifier

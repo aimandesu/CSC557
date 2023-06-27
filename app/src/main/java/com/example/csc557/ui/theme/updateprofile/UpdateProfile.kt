@@ -1,10 +1,12 @@
 package com.example.csc557.ui.theme.updateprofile
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +17,21 @@ import com.example.csc557.ui.theme.model.AccountUser
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+
+data class Object(
+    var Title: String,
+    var Input: MutableState<String>,
+    val focusRequester: FocusRequester = FocusRequester(),
+)
 
 @Composable
 fun updateProfile(
@@ -23,27 +40,105 @@ fun updateProfile(
     sharedViewModel: SharedViewModel
 ) {
     var context = LocalContext.current
+//    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     //all mutableState
-    var identityNumber: String by remember { mutableStateOf("") }
-    var fullName: String by remember { mutableStateOf("") }
-    var phoneNumber: String by remember { mutableStateOf("") }
-    var licenseNumber: String by remember { mutableStateOf("") }
+    var identityNumber = remember { mutableStateOf("") }
+    var fullName = remember { mutableStateOf("") }
+    var phoneNumber = remember { mutableStateOf("") }
+    var licenseNumber = remember { mutableStateOf("") }
+
+    val list = remember {
+        mutableStateListOf(
+            Object("Identity Number", identityNumber),
+            Object("Full Name", fullName),
+            Object("Phone Number", phoneNumber),
+            Object("License Number", licenseNumber)
+        )
+    }
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
-        Text(text = googleUID.toString())
+//        Text(text = googleUID.toString())
+        Text(
+            text = "Update Profile",
+            modifier = Modifier
+                .padding(start = 10.dp),
+            fontSize = 30.sp,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxHeight(0.8f)
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                list.forEachIndexed { index, item ->
+                    Text(item.Title, fontSize = 20.sp)
+                    Card(
+                        modifier = Modifier.padding(8.dp),
+                        shape = RoundedCornerShape(25.dp),
+                        elevation = 15.dp
+                    ) {
+                        TextField(
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color.Black,
+                                disabledTextColor = Color.Transparent,
+                                backgroundColor = Color.White,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent
+                            ),
+                            modifier = Modifier
+                                .focusRequester(item.focusRequester)
+                                .fillMaxWidth(),
+                            value = item.Input.value,
+                            onValueChange = { newText -> item.Input.value = newText },
+                            placeholder = { Text("Enter your ${item.Title}") },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = if (index < list.lastIndex) ImeAction.Next else ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    list[0].focusRequester.requestFocus()
+                                    if (index < list.lastIndex) {
+                                        list[index + 1].focusRequester.requestFocus()
+                                    }
+                                },
+                                onDone = {
+                                    focusManager.clearFocus()
+                                }
+                            )
+                        )
+                    }
+                }
+            }
+
+        }
+
         Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(30.dp)
+                .height(70.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(16, 85, 205)
+            ),
             onClick = {
                 if (googleUID != null) {
 
                     var account = AccountUser(
-                        identityNumber = identityNumber,
-                        fullName = fullName,
-                        phoneNumber = phoneNumber,
-                        licenseNumber = licenseNumber,
+                        identityNumber = identityNumber.value,
+                        fullName = fullName.value,
+                        phoneNumber = phoneNumber.value,
+                        licenseNumber = licenseNumber.value,
                         googleUID = googleUID,
                     )
 
@@ -57,7 +152,7 @@ fun updateProfile(
                 navController.navigateUp()
             }
         ) {
-            Text(text = "Update Profile")
+            Text(text = "Update Profile", color = Color.White)
         }
     }
 }
