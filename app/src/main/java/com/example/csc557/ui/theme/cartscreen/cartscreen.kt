@@ -85,7 +85,7 @@ fun cartScreen(
                         composition = composition,
                         progress = { progress },
                     )
-
+                    Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Cart is empty!",
@@ -97,7 +97,7 @@ fun cartScreen(
                     Column {
                         LazyColumn(
                             Modifier
-                                .fillMaxHeight(0.92f)
+                                .fillMaxHeight(0.9f)
                         ) {
                             itemsIndexed(theList) { index, item ->
                                 productsCard(
@@ -125,7 +125,7 @@ fun cartScreen(
 
                             },
                         ) {
-                            Text(text = "Pay Now", color = Color.White)
+                            Text(text = "Pay Now", color = Color.White,  fontSize = 18.sp,)
                         }
                     }
                 }

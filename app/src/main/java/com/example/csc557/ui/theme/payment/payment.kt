@@ -35,6 +35,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.model.Rent
+import com.example.csc557.R as res
 
 @Composable
 fun payment(
@@ -177,6 +178,7 @@ fun TimePreview(
         customDialog(
             title = "Car is added to cart",
             message = "Go to cart?",
+            animation = res.raw.completed,
             onDismiss = { showDialog = false },
             onConfirm = {
                 showDialog = false

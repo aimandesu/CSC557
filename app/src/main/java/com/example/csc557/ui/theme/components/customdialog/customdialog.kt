@@ -11,6 +11,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -18,12 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 
 
 @Composable
 fun customDialog(
     title: String,
     message: String,
+    animation: Int?,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
@@ -62,7 +67,24 @@ fun customDialog(
                     fontSize = 19.sp,
                     textAlign = TextAlign.Start
                 )
-                Spacer(modifier = Modifier.padding(top = 40.dp))
+
+                if(animation != null){
+                    val composition by rememberLottieComposition(
+                        spec = LottieCompositionSpec.RawRes(animation)
+                    )
+                    Box(modifier = Modifier
+                        .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ){
+                        LottieAnimation(
+                            modifier = Modifier.size(200.dp),
+                            composition = composition,
+                        )
+                    }
+
+                }
+
+                Spacer(modifier = Modifier.padding(top = 20.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),

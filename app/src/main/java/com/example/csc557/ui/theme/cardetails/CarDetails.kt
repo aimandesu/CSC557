@@ -39,6 +39,7 @@ import com.example.csc557.ui.theme.components.customdialog.customDialog
 import com.example.csc557.ui.theme.model.Car
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import com.example.csc557.R as res
 
 
 //@Composable
@@ -243,7 +244,8 @@ fun rentCar(
     if (showDialog) {
         customDialog(
             title = "Account Details",
-            message = "Account Details not available. \nPlease make account details first before renting car.\nThank You!",
+            message = "Account details not available. \nPlease make account details first before renting car. Thank You!",
+            animation = res.raw.upside_down,
             onDismiss = { showDialog = false },
             onConfirm = {
                 showDialog = false

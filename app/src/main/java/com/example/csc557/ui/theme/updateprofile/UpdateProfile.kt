@@ -49,6 +49,13 @@ fun updateProfile(
     var phoneNumber = remember { mutableStateOf("") }
     var licenseNumber = remember { mutableStateOf("") }
 
+    sharedViewModel.retrieveSpecificUserData(googleUID!!) { AccountUser ->
+        identityNumber.value = AccountUser.identityNumber
+        fullName.value = AccountUser.fullName
+        phoneNumber.value = AccountUser.phoneNumber
+        licenseNumber.value = AccountUser.licenseNumber
+    }
+
     val list = remember {
         mutableStateListOf(
             Object("Identity Number", identityNumber),

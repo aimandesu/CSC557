@@ -138,6 +138,9 @@ fun profileScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                         .padding(horizontal = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(16, 85, 205)
+                    ),
                     onClick = {
                         //navigate to screen for enter details, ni right now for testing
                         if (userData != null) {
@@ -145,7 +148,11 @@ fun profileScreen(
                         }
                     },
                 ) {
-                    Text(text = "Update Profile")
+                    Text(
+                        text = "Update Profile",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                    )
                 }
                 if (identityNumber != "") {
                     fourGrid(
@@ -162,22 +169,22 @@ fun profileScreen(
                         )
                     )
 
-                    val progress by animateLottieCompositionAsState(
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
+//                    val progress by animateLottieCompositionAsState(
+//                        composition = composition,
+//                        iterations = LottieConstants.IterateForever
+//                    )
 
                     LottieAnimation(
                         modifier = Modifier
                             .size(300.dp)
                             .align(Alignment.CenterHorizontally),
                         composition = composition,
-                        progress = { progress },
+//                        progress = { progress },
                     )
 
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Please Fill in your details before renting car.\n Thank You! ヽ(・∀・)ﾉ",
+                        text = "Please fill in your details before renting car.\n Thank You! ヽ(・∀・)ﾉ",
                         textAlign = TextAlign.Center,
                         fontSize = 25.sp
                     )
