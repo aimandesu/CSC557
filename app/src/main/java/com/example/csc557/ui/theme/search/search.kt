@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.*
+import com.example.csc557.R as res
 import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.model.Car
@@ -90,14 +92,37 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
     }
 
     if (resultNotFound) {
-        Text(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            text = "Cars with the result: $searches is not found",
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp,
-            color = Color.White
-        )
+                .fillMaxSize()
+        ) {
+            val composition by rememberLottieComposition(
+                spec = LottieCompositionSpec.RawRes(
+                    res.raw.search_not_found
+                )
+            )
+
+            val progress by animateLottieCompositionAsState(
+                composition = composition,
+                iterations = LottieConstants.IterateForever
+            )
+
+            LottieAnimation(
+                modifier = Modifier
+                    .size(300.dp)
+                    .align(Alignment.CenterHorizontally),
+                composition = composition,
+                progress = { progress },
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = "Cars with model name $searches is not found",
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                color = Color.White
+            )
+        }
     } else {
         LazyColumn(
         ) {

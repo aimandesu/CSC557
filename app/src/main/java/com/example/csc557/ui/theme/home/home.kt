@@ -164,7 +164,7 @@ fun viewAllCars(navController: NavController) {
             .fillMaxWidth()
             .height(230.dp)
             .padding(10.dp),
-        elevation = 10.dp,
+        elevation = 20.dp,
     ) {
         Image(
             painter = rememberImagePainter("https://wallpaperaccess.com/full/40047.jpg"),

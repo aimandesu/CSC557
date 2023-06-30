@@ -33,12 +33,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.*
 import com.example.csc557.NavigationItem
+import com.example.csc557.Screen
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
+import com.example.csc557.ui.theme.components.customdialog.customDialog
 import com.example.csc557.ui.theme.model.Rent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -162,6 +165,31 @@ fun productsCard(
 //        animationSpec = tween(durationMillis = 500)
 //    ).value
     val extraPadding = if (expanded.value) 0.98f else 1f
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showDialog) {
+        customDialog(
+            title = "Delete",
+            message = "Delete item from cart?",
+            animation = null,
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                sharedViewModel.deleteRent(context, deleteRent.rentID)
+                theList.remove(deleteRent)
+            },
+            onCancel = {
+                showDialog = false
+                expanded.value = false
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -187,8 +215,9 @@ fun productsCard(
                         backgroundColor = Color(16, 85, 205)
                     ),
                     onClick = {
-                        sharedViewModel.deleteRent(context, deleteRent.rentID)
-                        theList.remove(deleteRent)
+                        showDialog = true
+//                        sharedViewModel.deleteRent(context, deleteRent.rentID)
+//                        theList.remove(deleteRent)
                     },
                 ) {
                     Text(text = "Delete", color = Color.White)
@@ -269,13 +298,13 @@ fun productsCard(
                             Text(
                                 text = title,
                                 fontSize = 20.sp,
-                                color = Color.Black
+                                color = Color.White
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "RM$price",
                                 fontSize = 20.sp,
-                                color = Color.Black
+                                color = Color.White
                             )
                         }
                         Image(
@@ -323,7 +352,7 @@ fun productsCard(
                             modifier = Modifier.padding(start = 5.dp),
                             text = date,
                             fontSize = 20.sp,
-                            color = Color.Black
+                            color = Color.White
                         )
                         Spacer(Modifier.weight(1f))
                         Text(

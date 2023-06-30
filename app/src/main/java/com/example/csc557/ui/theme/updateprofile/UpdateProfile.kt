@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.KeyboardType
 
 data class Object(
     var Title: String,
@@ -122,7 +123,8 @@ fun updateProfile(
                             onValueChange = { newText -> item.Input.value = newText },
                             placeholder = { Text("Enter your ${item.Title}") },
                             keyboardOptions = KeyboardOptions(
-                                imeAction = if (index < list.lastIndex) ImeAction.Next else ImeAction.Done
+                                imeAction = if (index < list.lastIndex) ImeAction.Next else ImeAction.Done,
+                                keyboardType = if (index == 0 || index == 2) KeyboardType.Number else KeyboardType.Text
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = {
