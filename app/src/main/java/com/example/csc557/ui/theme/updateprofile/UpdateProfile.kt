@@ -1,6 +1,7 @@
 package com.example.csc557.ui.theme.updateprofile
 
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -87,6 +88,17 @@ fun updateProfile(
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceAround
             ) {
+//                var questionIndex by remember { mutableStateOf(0) }
+//
+//                val progress by animateFloatAsState(
+//                    targetValue = (questionIndex / list.size.toFloat()),
+//                )
+//
+//                LinearProgressIndicator(
+//                    modifier = Modifier.fillMaxWidth(1f),
+//                    progress = progress
+//                )
+
                 list.forEachIndexed { index, item ->
                     Text(item.Title, fontSize = 20.sp)
                     Card(
@@ -118,9 +130,11 @@ fun updateProfile(
                                     if (index < list.lastIndex) {
                                         list[index + 1].focusRequester.requestFocus()
                                     }
+//                                    questionIndex = index + 1
                                 },
                                 onDone = {
                                     focusManager.clearFocus()
+//                                    questionIndex = index + 1
                                 }
                             )
                         )

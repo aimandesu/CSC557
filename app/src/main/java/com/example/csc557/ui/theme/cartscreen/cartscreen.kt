@@ -2,15 +2,21 @@ package com.example.csc557.ui.theme.cartscreen
 
 import android.text.method.Touch
 import android.util.Log
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -34,6 +40,8 @@ import com.example.csc557.NavigationItem
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.model.Rent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import com.example.csc557.R as res
 
 @Composable
@@ -109,7 +117,7 @@ fun cartScreen(
                                     theList[index].endTime,
                                     theList,
                                     theList[index],
-                                    sharedViewModel
+                                    sharedViewModel,
                                 )
                             }
                         }
@@ -125,7 +133,7 @@ fun cartScreen(
 
                             },
                         ) {
-                            Text(text = "Pay Now", color = Color.White,  fontSize = 18.sp,)
+                            Text(text = "Pay Now", color = Color.White, fontSize = 18.sp)
                         }
                     }
                 }
@@ -144,17 +152,16 @@ fun productsCard(
     endTime: String,
     theList: SnapshotStateList<Rent>,
     deleteRent: Rent,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
 ) {
 
     val context = LocalContext.current
     val expanded = remember { mutableStateOf(false) }
-    val extraPadding = animateFloatAsState(
-        targetValue = if (expanded.value) 0.98f else 1f,
-        animationSpec = tween(durationMillis = 500)
-    ).value
-
-
+//    val extraPadding = animateFloatAsState(
+//        targetValue = if (expanded.value) 0.98f else 1f,
+//        animationSpec = tween(durationMillis = 500)
+//    ).value
+    val extraPadding = if (expanded.value) 0.98f else 1f
 
     Box(
         modifier = Modifier
@@ -170,15 +177,21 @@ fun productsCard(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             if (expanded.value) {
-                IconButton(
+                TextButton(
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp),
+                        .fillMaxHeight(),
+//                        .height(30.dp)
+//                        .width(30.dp),
+                    shape = RoundedCornerShape(25.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(16, 85, 205)
+                    ),
                     onClick = {
                         sharedViewModel.deleteRent(context, deleteRent.rentID)
                         theList.remove(deleteRent)
-                    }) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+                    },
+                ) {
+                    Text(text = "Delete", color = Color.White)
                 }
             }
             Column {
@@ -206,30 +219,45 @@ fun productsCard(
                                         Color.White,
                                     )
                                 )
-                            ),
+                            )
+                            .animateContentSize(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioLowBouncy,
+                                    stiffness = Spring.StiffnessLow,
+                                ),
+                            )
+                            .clickable {
+                                expanded.value = !expanded.value
+                            },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(
-                            modifier = Modifier
-                                .height(30.dp)
-                                .width(30.dp),
-                            onClick = {
-                                expanded.value = !expanded.value
-                            },
-                        ) {
-                            if (expanded.value) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowForward,
-                                    contentDescription = null
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
+//                        IconButton(
+//                            modifier = Modifier
+//                                .height(30.dp)
+//                                .width(30.dp)
+//                                .animateContentSize(
+//                                    animationSpec = spring(
+//                                        dampingRatio = Spring.DampingRatioLowBouncy,
+//                                        stiffness = Spring.StiffnessLow
+//                                    )
+//                                ),
+//                            onClick = {
+//                                expanded.value = !expanded.value
+//                            },
+//                        ) {
+//                            if (expanded.value) {
+//                                Icon(
+//                                    imageVector = Icons.Filled.ArrowForward,
+//                                    contentDescription = null
+//                                )
+//                            } else {
+//                                Icon(
+//                                    imageVector = Icons.Filled.ArrowBack,
+//                                    contentDescription = null
+//                                )
+//                            }
+//                        }
                         Column(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -264,7 +292,7 @@ fun productsCard(
                 Surface(
                     modifier = Modifier
                         .height(70.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(extraPadding)
                         .padding(top = 5.dp),
                     shape = RoundedCornerShape(
                         topStart = 16.dp,
@@ -276,8 +304,6 @@ fun productsCard(
                 ) {
                     Row(
                         modifier = Modifier
-
-
                             .background(
                                 Brush.linearGradient(
                                     colors = listOf(
@@ -285,7 +311,13 @@ fun productsCard(
                                         Color.White,
                                     )
                                 )
-                            ),
+                            )
+//                            .animateContentSize(
+//                                animationSpec = spring(
+//                                    dampingRatio = Spring.DampingRatioLowBouncy,
+//                                    stiffness = Spring.StiffnessLow,
+//                                ),
+//                            ),
                     ) {
                         Text(
                             modifier = Modifier.padding(start = 5.dp),
