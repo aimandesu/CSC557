@@ -16,6 +16,27 @@ import com.google.firebase.ktx.Firebase
 
 class SharedViewModel() : ViewModel() {
 
+    fun cartPayment(
+        listPay: List<String>
+    ){
+        for (i in listPay){
+            val firestoreRef = Firebase
+                .firestore
+                .collection("rent")
+                .document(i)
+
+            try{
+                val updateData = hashMapOf<String, Any>(
+                    "paid" to true
+                )
+                firestoreRef
+                    .update(updateData)
+            }catch (e: Exception){
+                Log.d("theres a catch", e.message.toString())
+            }
+        }
+    }
+
     fun deleteRent(
         context: Context,
         rentID: String

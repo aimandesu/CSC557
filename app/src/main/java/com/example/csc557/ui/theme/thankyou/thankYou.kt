@@ -1,6 +1,7 @@
 package com.example.csc557.ui.theme.thankyou
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
@@ -17,13 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.csc557.R
+import com.example.csc557.Screen
 
 @Composable
 fun thankYou(navController: NavController) {
     thanks()
-    ButtonHome()
-
-
+    ButtonHome(navController)
 }
 
 @Composable
@@ -42,7 +42,7 @@ fun thanks() {
 }
 
 @Composable
-fun ButtonHome() {
+fun ButtonHome(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
@@ -58,7 +58,14 @@ fun ButtonHome() {
         ) {
             Box(
                 modifier = Modifier
-                    .background(color = Color.DarkGray),
+                    .background(color = Color.DarkGray)
+                    .clickable {
+                        navController.navigate(Screen.HomeScreen.route){
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

@@ -30,7 +30,7 @@ fun cartPayment(
         modifier = Modifier.fillMaxSize(),
     ) {
         CreditCard()
-        PayNow(navController)
+        PayNow(navController, sharedViewModel, myList)
     }
 }
 
@@ -93,7 +93,11 @@ fun CreditCard() {
 }
 
 @Composable
-fun PayNow(navController: NavController) {
+fun PayNow(
+    navController: NavController,
+    sharedViewModel: SharedViewModel,
+    myList: List<String>
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
@@ -113,7 +117,7 @@ fun PayNow(navController: NavController) {
                     .background(color = Color(16, 85, 205))
                     .clickable {
                         navController.navigate(Screen.ThankYou.route)
-
+                        sharedViewModel.cartPayment(myList)
                     },
                 contentAlignment = Alignment.Center
             ) {
