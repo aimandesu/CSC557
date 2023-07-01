@@ -30,6 +30,8 @@ import com.example.csc557.ui.theme.payment.payment
 import com.example.csc557.ui.theme.search.search
 import androidx.lifecycle.lifecycleScope
 import com.example.csc557.ui.theme.boardinglogin.GoogleAuthUiClient
+import com.example.csc557.ui.theme.cartpayment.cartPayment
+import com.example.csc557.ui.theme.thankyou.thankYou
 import com.example.csc557.ui.theme.updateprofile.updateProfile
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -208,6 +210,22 @@ class MainActivity : ComponentActivity() {
                             navController,
                             sharedViewModel,
                         )
+                    }
+                    composable(
+                        route = Screen.CartPayment.route + "/{myList}",
+                        arguments = listOf(
+                            navArgument("myList"){
+                                type = NavType.StringType
+                            }
+                        )
+                    ){navBackStackEntry ->
+                        val myList = navBackStackEntry.arguments?.getString("myList")?.split(",")?: emptyList()
+                        cartPayment(navController, sharedViewModel, myList)
+                    }
+                    composable(
+                        route = Screen.ThankYou.route,
+                    ){
+                        thankYou(navController)
                     }
                 }
             }

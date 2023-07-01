@@ -133,10 +133,13 @@ fun cartScreen(
                                 backgroundColor = Color(16, 85, 205)
                             ),
                             onClick = {
-
+                                val myList = theList.map { it.rentID }
+                                val myListString = myList.toList().joinToString(",")
+                                Log.d("bor", myListString)
+                                navController.navigate(Screen.CartPayment.route + "/${myListString}")
                             },
                         ) {
-                            Text(text = "Pay Now", color = Color.White, fontSize = 18.sp)
+                            Text(text = "Confirm", color = Color.White, fontSize = 18.sp)
                         }
                     }
                 }
@@ -176,6 +179,7 @@ fun productsCard(
             animation = null,
             onDismiss = { showDialog = false },
             onConfirm = {
+                expanded.value = false
                 showDialog = false
                 sharedViewModel.deleteRent(context, deleteRent.rentID)
                 theList.remove(deleteRent)
