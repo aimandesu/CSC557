@@ -29,6 +29,12 @@ fun cartPayment(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
+        Text(
+            text = "To Pay",
+            modifier = Modifier
+                .padding(start = 10.dp),
+            fontSize = 30.sp,
+        )
         CreditCard()
         PayNow(navController, sharedViewModel, myList)
     }

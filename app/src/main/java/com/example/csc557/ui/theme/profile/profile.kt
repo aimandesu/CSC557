@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +31,10 @@ import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.model.AccountUser
 import com.example.csc557.R as res
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun profileScreen(
@@ -89,9 +93,33 @@ fun profileScreen(
                             .padding(start = 10.dp),
                         fontSize = 30.sp,
                     )
-                    IconButton(onClick = onSignOut) {
-                        Icon(imageVector = Icons.Filled.Close, contentDescription = "log out")
+                    Row {
+                        IconButton(
+                            onClick = {
+                                //userData.userUID
+                                if (userData != null) {
+                                    navController.navigate(Screen.PastOrder.route + "/${userData.userId}")
+                                }
+                            },
+                        ) {
+                            Image(
+                                painterResource(id = res.drawable.baseline_assignment_24),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(30.dp),
+                                colorFilter = ColorFilter.tint(color = Color.Black)
+                            )
+                        }
+                        IconButton(onClick = onSignOut) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp),
+                                imageVector = Icons.Filled.ExitToApp,
+                                contentDescription = "log out"
+                            )
+                        }
                     }
+
                 }
 
                 Row(

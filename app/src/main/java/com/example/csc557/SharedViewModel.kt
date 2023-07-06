@@ -59,14 +59,15 @@ class SharedViewModel() : ViewModel() {
 
     fun fetchRent(
         googleUID: String,
-        boolResult: (Boolean) -> Unit
+        paid: Boolean,
+        boolResult: (Boolean) -> Unit,
     ): SnapshotStateList<Rent> {
         var rentFound = mutableStateListOf<Rent>()
 
         var db: FirebaseFirestore = FirebaseFirestore.getInstance()
         db.collection("rent")
             .whereEqualTo("googleUID", googleUID)
-            .whereEqualTo("paid", false)
+            .whereEqualTo("paid", paid)
             .get()
             .addOnSuccessListener { queryDocumentSnapshots ->
                 if (!queryDocumentSnapshots.isEmpty) {

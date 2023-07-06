@@ -70,10 +70,11 @@ fun cartScreen(
 //                verticalArrangement = Arrangement.Center,
 //                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val theList = sharedViewModel.fetchRent(userData!!.userId) { boolResult ->
-                    resultNotFound = boolResult
-
-                }
+                val theList = sharedViewModel
+                    .fetchRent(userData!!.userId, false)
+                    { boolResult ->
+                        resultNotFound = boolResult
+                    }
                 Text(
                     text = "Cart",
                     modifier = Modifier

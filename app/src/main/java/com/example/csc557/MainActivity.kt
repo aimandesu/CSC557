@@ -31,6 +31,7 @@ import com.example.csc557.ui.theme.search.search
 import androidx.lifecycle.lifecycleScope
 import com.example.csc557.ui.theme.boardinglogin.GoogleAuthUiClient
 import com.example.csc557.ui.theme.cartpayment.cartPayment
+import com.example.csc557.ui.theme.pastorder.PastOrder
 import com.example.csc557.ui.theme.thankyou.thankYou
 import com.example.csc557.ui.theme.updateprofile.updateProfile
 import com.google.android.gms.auth.api.identity.Identity
@@ -128,7 +129,8 @@ class MainActivity : ComponentActivity() {
                             sharedViewModel
                         )
                     }
-                    composable(route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}/{carImage}",
+                    composable(
+                        route = Screen.PaymentDetailScreen.route + "/{carModel}/{carBrand}/{price}/{carImage}",
                         arguments = listOf(
                             navArgument("carModel") {
                                 type = NavType.StringType
@@ -171,7 +173,11 @@ class MainActivity : ComponentActivity() {
                         allCars(navController = navController, sharedViewModel)
                     }
                     composable(route = Screen.CartScreen.route) {
-                        cartScreen(navController, sharedViewModel,  googleAuthUiClient.getSignedInUser(), )
+                        cartScreen(
+                            navController,
+                            sharedViewModel,
+                            googleAuthUiClient.getSignedInUser(),
+                        )
                     }
                     composable(route = Screen.ProfileScreen.route) {
                         profileScreen(
@@ -214,18 +220,33 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = Screen.CartPayment.route + "/{myList}",
                         arguments = listOf(
-                            navArgument("myList"){
+                            navArgument("myList") {
                                 type = NavType.StringType
                             }
                         )
-                    ){navBackStackEntry ->
-                        val myList = navBackStackEntry.arguments?.getString("myList")?.split(",")?: emptyList()
+                    ) { navBackStackEntry ->
+                        val myList = navBackStackEntry.arguments?.getString("myList")?.split(",")
+                            ?: emptyList()
                         cartPayment(navController, sharedViewModel, myList)
                     }
                     composable(
                         route = Screen.ThankYou.route,
-                    ){
+                    ) {
                         thankYou(navController)
+                    }
+                    composable(
+                        route = Screen.PastOrder.route + "/{googleUID}",
+                        arguments = listOf(
+                            navArgument("googleUID") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) {navBackStackEntry ->
+                        PastOrder(
+                            googleUID = navBackStackEntry.arguments?.getString("googleUID"),
+                            navController = navController,
+                            sharedViewModel = sharedViewModel,
+                        )
                     }
                 }
             }
