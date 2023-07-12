@@ -44,6 +44,7 @@ import com.example.csc557.ui.theme.boardinglogin.UserData
 import com.example.csc557.ui.theme.components.customdialog.customDialog
 import com.example.csc557.ui.theme.model.Rent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.csc557.R as res
 
@@ -54,6 +55,12 @@ fun cartScreen(
     userData: UserData?
 ) {
     var resultNotFound: Boolean by remember { mutableStateOf(false) }
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(500) // Delay of 1 second (1000 milliseconds)
+        isVisible = true
+    }
 
     Scaffold(
         bottomBar = {
@@ -84,23 +91,23 @@ fun cartScreen(
                 if (resultNotFound) {
                     val composition by rememberLottieComposition(
                         spec = LottieCompositionSpec.RawRes(
-                            res.raw.empty
+                            res.raw.list_empty
                         )
                     )
-                    val progress by animateLottieCompositionAsState(
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
+//                    val progress by animateLottieCompositionAsState(
+//                        composition = composition,
+//                        iterations = LottieConstants.IterateForever
+//                    )
 
                     LottieAnimation(
                         modifier = Modifier.size(400.dp),
                         composition = composition,
-                        progress = { progress },
+//                        progress = { progress },
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Cart is empty!",
+                        text = "Cart is empty. (´･ᴗ･ ` )",
                         textAlign = TextAlign.Center,
                         fontSize = 25.sp
                     )
@@ -125,23 +132,26 @@ fun cartScreen(
                                 )
                             }
                         }
-                        Button(
-                            modifier = Modifier
-                                .height(70.dp)
-                                .fillMaxWidth()
-                                .padding(vertical = 5.dp, horizontal = 5.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(16, 85, 205)
-                            ),
-                            onClick = {
-                                val myList = theList.map { it.rentID }
-                                val myListString = myList.toList().joinToString(",")
-                                Log.d("bor", myListString)
-                                navController.navigate(Screen.CartPayment.route + "/${myListString}")
-                            },
-                        ) {
-                            Text(text = "Confirm", color = Color.White, fontSize = 18.sp)
+                        if (isVisible) {
+                            Button(
+                                modifier = Modifier
+                                    .height(70.dp)
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp, horizontal = 5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color(16, 85, 205)
+                                ),
+                                onClick = {
+                                    val myList = theList.map { it.rentID }
+                                    val myListString = myList.toList().joinToString(",")
+                                    Log.d("bor", myListString)
+                                    navController.navigate(Screen.CartPayment.route + "/${myListString}")
+                                },
+                            ) {
+                                Text(text = "Confirm", color = Color.White, fontSize = 18.sp)
+                            }
                         }
+
                     }
                 }
             }
@@ -318,7 +328,7 @@ fun productsCard(
                                 .padding(5.dp),
                             painter = rememberImagePainter(carImage),
                             contentDescription = "",
-                            contentScale = ContentScale.FillHeight,
+                            contentScale = ContentScale.Fit,
 //                    alignment = Alignment.Center,
                         )
                     }

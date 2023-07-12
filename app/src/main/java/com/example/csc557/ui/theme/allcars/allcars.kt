@@ -115,14 +115,10 @@ fun allCars(navController: NavController, sharedViewModel: SharedViewModel) {
                                     ) {
                                         Box(
                                             Modifier
-                                                .height(295.dp)
-                                                .width(295.dp)
+                                                .height(270.dp)
+                                                .width(293.dp)
                                         ) {
-                                            Image(
-                                                painter = rememberImagePainter(theList[index].image),
-                                                contentDescription = "",
-                                                contentScale = ContentScale.FillHeight,
-                                            )
+
                                             Column(
                                                 modifier = Modifier.fillMaxSize(),
                                                 verticalArrangement = Arrangement.SpaceBetween,
@@ -138,29 +134,34 @@ fun allCars(navController: NavController, sharedViewModel: SharedViewModel) {
                                                     Text(
                                                         text = theList[index].model,
                                                         fontSize = 20.sp,
-                                                        color = Color.White
+                                                        color = Color.Black
                                                     )
                                                     Text(
-                                                        text = "RM" + theList[index].price.toString() + "\n/per day",
+                                                        text = "RM" + theList[index].price.toString() + "\n/per hour",
                                                         fontSize = 18.sp,
-                                                        color = Color.White
+                                                        color = Color.Black
                                                     )
                                                 }
+                                                Image(
+                                                    painter = rememberImagePainter(theList[index].image),
+                                                    contentDescription = "",
+                                                    contentScale = ContentScale.Fit,
+                                                )
                                                 Row(
                                                     modifier =
                                                     Modifier
 //                                .padding(5.dp)
                                                         .fillMaxWidth()
-                                                        .height(35.dp),
-                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                        .height(37.dp),
+                                                    horizontalArrangement = Arrangement.End,
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                    Text(
-                                                        text = "Details",
-                                                        modifier = Modifier.padding(start = 5.dp),
-                                                        fontSize = 18.sp,
-                                                        color = Color.White
-                                                    )
+//                                                    Text(
+//                                                        text = "Details",
+//                                                        modifier = Modifier.padding(start = 5.dp),
+//                                                        fontSize = 18.sp,
+//                                                        color = Color.White
+//                                                    )
                                                     Button(
                                                         shape = RoundedCornerShape(topStart = 22.dp),
                                                         colors = ButtonDefaults.buttonColors(

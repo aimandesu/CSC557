@@ -188,6 +188,7 @@ fun viewAllCars(navController: NavController) {
                             startY = 10f
                         ),
                     ),
+                fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
@@ -251,11 +252,7 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
 //                        .background(color = Color.Red)
 
                     ) {
-                        Image(
-                            painter = rememberImagePainter(theList[index].image),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillHeight,
-                        )
+
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.SpaceBetween,
@@ -271,12 +268,12 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
                                 Text(
                                     text = theList[index].model,
                                     fontSize = 20.sp,
-                                    color = Color.White
+                                    color = Color.Black
                                 )
                                 Text(
-                                    text = "RM" + theList[index].price.toString() + "\n/per day",
+                                    text = "RM" + theList[index].price.toString() + "\n/per hour",
                                     fontSize = 18.sp,
-                                    color = Color.White,
+                                    color = Color.Black,
 //                                    modifier = Modifier
 //                                        .background(
 //                                            Brush.verticalGradient(
@@ -286,21 +283,26 @@ fun listCars(navController: NavController, sharedViewModel: SharedViewModel) {
 //                                        ),
                                 )
                             }
+                            Image(
+                                painter = rememberImagePainter(theList[index].image),
+                                contentDescription = "",
+                                contentScale = ContentScale.Fit,
+                            )
                             Row(
                                 modifier =
                                 Modifier
 //                                .padding(5.dp)
                                     .fillMaxWidth()
                                     .height(35.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "Details",
-                                    modifier = Modifier.padding(start = 5.dp),
-                                    fontSize = 18.sp,
-                                    color = Color.White
-                                )
+//                                Text(
+//                                    text = "",
+//                                    modifier = Modifier.padding(start = 5.dp),
+//                                    fontSize = 18.sp,
+//                                    color = Color.White
+//                                )
                                 Button(
                                     shape = RoundedCornerShape(topStart = 22.dp),
                                     colors = ButtonDefaults.buttonColors(

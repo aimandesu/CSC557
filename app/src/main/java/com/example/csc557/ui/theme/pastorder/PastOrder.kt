@@ -10,9 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.*
+import com.example.csc557.R
 import com.example.csc557.SharedViewModel
 import com.example.csc557.ui.theme.boardinglogin.UserData
 
@@ -41,7 +44,28 @@ fun PastOrder(
             fontSize = 30.sp,
         )
         if (resultNotFound) {
-            Text(text = "no past order")
+            val composition by rememberLottieComposition(
+                spec = LottieCompositionSpec.RawRes(
+                    R.raw.list_empty
+                )
+            )
+//            val progress by animateLottieCompositionAsState(
+//                composition = composition,
+//                iterations = LottieConstants.IterateForever
+//            )
+
+            LottieAnimation(
+                modifier = Modifier.size(400.dp),
+                composition = composition,
+//                progress = { progress },
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "No record found. (´･ᴗ･ ` )",
+                textAlign = TextAlign.Center,
+                fontSize = 25.sp
+            )
         } else {
             LazyColumn(
                 Modifier

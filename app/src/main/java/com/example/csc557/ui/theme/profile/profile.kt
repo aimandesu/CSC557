@@ -35,6 +35,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import kotlinx.coroutines.delay
 
 @Composable
 fun profileScreen(
@@ -48,6 +49,13 @@ fun profileScreen(
     var fullName: String by remember { mutableStateOf("") }
     var phoneNumber: String by remember { mutableStateOf("") }
     var licenseNumber: String by remember { mutableStateOf("") }
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(500) // Delay of 1 second (1000 milliseconds)
+        isVisible = true
+    }
 
 //    var account = AccountUser()
 
@@ -191,31 +199,35 @@ fun profileScreen(
                     )
                 } else {
 
-                    val composition by rememberLottieComposition(
-                        spec = LottieCompositionSpec.RawRes(
-                            res.raw.create_account
+                    if (isVisible) {
+                        val composition by rememberLottieComposition(
+                            spec = LottieCompositionSpec.RawRes(
+                                res.raw.create_account
+                            )
                         )
-                    )
 
 //                    val progress by animateLottieCompositionAsState(
 //                        composition = composition,
 //                        iterations = LottieConstants.IterateForever
 //                    )
 
-                    LottieAnimation(
-                        modifier = Modifier
-                            .size(300.dp)
-                            .align(Alignment.CenterHorizontally),
-                        composition = composition,
+                        LottieAnimation(
+                            modifier = Modifier
+                                .size(300.dp)
+                                .align(Alignment.CenterHorizontally),
+                            composition = composition,
 //                        progress = { progress },
-                    )
+                        )
 
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Please fill in your details before renting car.\n Thank You! ヽ(・∀・)ﾉ",
-                        textAlign = TextAlign.Center,
-                        fontSize = 25.sp
-                    )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Please fill in your details before renting car.\n Thank You. ( = ⩊ = )",
+                            textAlign = TextAlign.Center,
+                            fontSize = 25.sp
+                        )
+                    }
+
+
                 }
 //                Column(
 //                    modifier = Modifier

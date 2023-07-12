@@ -117,7 +117,7 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = "Cars with model name $searches is not found",
+                text = "car model $searches is not found. ┐(￣～￣)┌",
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
                 color = Color.White
@@ -134,14 +134,15 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
                 ) {
                     Box(
                         Modifier
-                            .height(390.dp)
+                            .height(350.dp)
                             .width(350.dp)
                             .fillMaxWidth()
                     ) {
                         Image(
                             painter = rememberImagePainter(theList[index].image),
                             contentDescription = "",
-                            contentScale = ContentScale.FillHeight,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize(0.99f)
                         )
                         Column(
                             modifier = Modifier.fillMaxSize(),
@@ -158,12 +159,12 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
                                 Text(
                                     text = theList[index].model,
                                     fontSize = 20.sp,
-                                    color = Color.White
+                                    color = Color.Black
                                 )
                                 Text(
-                                    text = "RM" + theList[index].price.toString() + "\n/per day",
+                                    text = "RM" + theList[index].price.toString() + "\n/per hour",
                                     fontSize = 18.sp,
-                                    color = Color.White
+                                    color = Color.Black
                                 )
                             }
                             Row(
@@ -171,15 +172,15 @@ fun searchResult(searches: String, navController: NavController, sharedViewModel
                                 Modifier
                                     .fillMaxWidth()
                                     .height(55.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "Details",
-                                    modifier = Modifier.padding(start = 15.dp),
-                                    fontSize = 18.sp,
-                                    color = Color.White
-                                )
+//                                Text(
+//                                    text = "Details",
+//                                    modifier = Modifier.padding(start = 15.dp),
+//                                    fontSize = 18.sp,
+//                                    color = Color.White
+//                                )
                                 Button(
                                     modifier = Modifier
                                         .fillMaxHeight()
