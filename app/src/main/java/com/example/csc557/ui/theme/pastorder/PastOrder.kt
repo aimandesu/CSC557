@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +33,21 @@ fun PastOrder(
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
+        TopAppBar(
+//            elevation = 0.dp,
+            title = {
+                Text("Reservation List")
+            },
+            backgroundColor = Color.White,
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.navigateUp()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, null, tint = Color.Black)
+                }
+            },
+
+            )
         val theList = sharedViewModel
             .fetchRent(googleUID.toString(), true)
             { boolResult ->

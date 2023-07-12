@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,21 @@ fun cartPayment(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
+        TopAppBar(
+//            elevation = 0.dp,
+            title = {
+                Text("Payment")
+            },
+            backgroundColor = Color.White,
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.navigateUp()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, null, tint = Color.Black)
+                }
+            },
+
+            )
         Text(
             text = "To Pay",
             modifier = Modifier
